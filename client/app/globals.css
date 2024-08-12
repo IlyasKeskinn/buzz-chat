@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+
+    --muted: 56 50% 15%;
+    --muted-foreground: 56 10% 55%;
+
+    --popover: 56 45% 6.5%;
+    --popover-foreground: 56 10% 97.5%;
+
+    --card: 56 45% 6.5%;
+    --card-foreground: 56 10% 97.5%;
+
+    --border: 56 50% 15%;
+    --input: 56 50% 15%;
+
+    --primary: 56 100% 50%;
+    --primary-foreground: 56 10% 5%;
+
+    --secondary: 56 50% 15%;
+    --secondary-foreground: 56 10% 97.5%;
+
+    --accent: 56 50% 15%;
+    --accent-foreground: 56 10% 97.5%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 56 10% 97.5%;
+
+    --ring: 56 100% 50%;
+  }
+
+  .dark {
+    /* Name: custom color palette
+       Author: Ilias Ism
+       URL: https://gradient.page */
+
+    /* CSS: .bg-gradient { background: var(--gradient) } */
+    --gradient: #ffe000;
+
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --muted: 56 50% 15%;
+    --muted-foreground: 56 10% 55%;
+
+    --popover: 56 45% 6.5%;
+    --popover-foreground: 56 10% 97.5%;
+
+    --card: 56 45% 6.5%;
+    --card-foreground: 56 10% 97.5%;
+
+    --border: 56 50% 15%;
+    --input: 56 50% 15%;
+
+    --primary: 56 100% 50%;
+    --primary-foreground: 56 10% 5%;
+
+    --secondary: 56 50% 15%;
+    --secondary-foreground: 56 10% 97.5%;
+
+    --accent: 56 50% 15%;
+    --accent-foreground: 56 10% 97.5%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 56 10% 97.5%;
+
+    --ring: 56 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
