@@ -11,7 +11,7 @@ const ThemeButton = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
   };
   return (
-    <Button className="rounded-xl py-5 px-7"  onClick={handleTheme}>
+    <Button className="rounded-xl py-6 px-5"  onClick={handleTheme}>
       {theme === "light" ? <LuMoon /> : <GoSun />}
     </Button>
   );

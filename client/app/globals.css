@@ -4,9 +4,10 @@
 
 @layer base {
   :root {
+    --gradient: #ffe000;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-
 
     --muted: 56 50% 15%;
     --muted-foreground: 56 10% 55%;
@@ -18,7 +19,7 @@
     --card-foreground: 56 10% 97.5%;
 
     --border: 56 50% 15%;
-    --input: 56 50% 15%;
+    --input: 0 0% 86.7%;
 
     --primary: 56 100% 50%;
     --primary-foreground: 56 10% 5%;
@@ -43,7 +44,7 @@
     /* CSS: .bg-gradient { background: var(--gradient) } */
     --gradient: #ffe000;
 
-    --background: 222.2 84% 4.9%;
+    --background: 0 0% 9.8%;
     --foreground: 210 40% 98%;
 
     --muted: 56 50% 15%;
@@ -56,7 +57,7 @@
     --card-foreground: 56 10% 97.5%;
 
     --border: 56 50% 15%;
-    --input: 56 50% 15%;
+    --input: 0 0% 86.7%;
 
     --primary: 56 100% 50%;
     --primary-foreground: 56 10% 5%;
@@ -80,5 +81,19 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+
+@layer utilities {
+  .wrapper {
+    @apply max-w-7xl lg:mx-auto p-5 md:px-10 xl:px-0 w-full;
+  }
+  .input-field {
+    @apply shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-inner  focus-visible:ring-offset-0 focus-visible:ring-transparent !important;
+  }
+  .text-field {
+    @apply shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-inner  focus-visible:ring-offset-0 focus-visible:ring-transparent !important;
+
   }
 }
