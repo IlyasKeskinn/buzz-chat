@@ -4,74 +4,68 @@
 
 @layer base {
   :root {
-    --gradient: #ffe000;
+    --gradient: #ffeb3b; /* Pastel sarı tonunda bir gradient */
 
-    --background: 0 0% 100%;
+    --background: 60 100% 98%;
     --foreground: 222.2 84% 4.9%;
 
-    --muted: 56 50% 15%;
-    --muted-foreground: 56 10% 55%;
+    --muted: 56 50% 95%;
+    --muted-foreground: 56 10% 25%;
 
-    --popover: 56 45% 6.5%;
-    --popover-foreground: 56 10% 97.5%;
+    --popover: 56 45% 96.5%;
+    --popover-foreground: 56 10% 17.5%;
 
-    --card: 56 45% 6.5%;
-    --card-foreground: 56 10% 97.5%;
+    --card: 56 45% 96.5%;
+    --card-foreground: 56 10% 17.5%;
 
-    --border: 56 50% 15%;
-    --input: 0 0% 86.7%;
+    --border: 56 50% 85%;
+    --input: 0 0% 90%;
 
-    --primary: 56 100% 50%;
-    --primary-foreground: 56 10% 5%;
+    --primary: 50 100% 50%; 
+    --primary-foreground: 60 10% 10%;
 
-    --secondary: 56 50% 15%;
-    --secondary-foreground: 56 10% 97.5%;
+    --secondary: 41 87% 85%;
+    --secondary-foreground: 56 10% 17.5%;
 
-    --accent: 56 50% 15%;
-    --accent-foreground: 56 10% 97.5%;
+    --accent: 50 50% 80%;
+    --accent-foreground: 56 10% 27.5%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 56 10% 97.5%;
+    --destructive: 0 62.8% 80%;
+    --destructive-foreground: 56 10% 17.5%;
 
-    --ring: 56 100% 50%;
+    --ring: 50 100% 50%;
   }
-
   .dark {
-    /* Name: custom color palette
-       Author: Ilias Ism
-       URL: https://gradient.page */
+    --gradient: #ffeb3b;
 
-    /* CSS: .bg-gradient { background: var(--gradient) } */
-    --gradient: #ffe000;
-
-    --background: 0 0% 9.8%;
+    --background: 210 40% 10%;
     --foreground: 210 40% 98%;
 
-    --muted: 56 50% 15%;
-    --muted-foreground: 56 10% 55%;
+    --muted: 56 50% 95%;
+    --muted-foreground: 56 10% 75%;
 
-    --popover: 56 45% 6.5%;
-    --popover-foreground: 56 10% 97.5%;
+    --popover: 56 45% 16.5%;
+    --popover-foreground: 56 10% 87.5%;
 
-    --card: 56 45% 6.5%;
-    --card-foreground: 56 10% 97.5%;
+    --card: 56 45% 16.5%;
+    --card-foreground: 56 10% 87.5%;
 
-    --border: 56 50% 15%;
-    --input: 0 0% 86.7%;
+    --border: 56 50% 25%;
+    --input: 0 0% 26.7%;
 
-    --primary: 56 100% 50%;
-    --primary-foreground: 56 10% 5%;
+    --primary: 50 100% 50%;
+    --primary-foreground: 60 10% 10%;
 
-    --secondary: 56 50% 15%;
-    --secondary-foreground: 56 10% 97.5%;
+    --secondary: 41 87% 55%;
+    --secondary-foreground: 56 10% 87.5%;
 
-    --accent: 56 50% 15%;
-    --accent-foreground: 56 10% 97.5%;
+    --accent: 50 50% 55%;
+    --accent-foreground: 56 10% 87.5%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 56 10% 97.5%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 56 10% 87.5%;
 
-    --ring: 56 100% 50%;
+    --ring: 50 100% 50%;
   }
 }
 
@@ -84,16 +78,14 @@
   }
 }
 
-
 @layer utilities {
   .wrapper {
     @apply max-w-7xl lg:mx-auto p-5 md:px-10 xl:px-0 w-full;
   }
   .input-field {
-    @apply shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-inner  focus-visible:ring-offset-0 focus-visible:ring-transparent !important;
+    @apply h-12 shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:shadow-inner  focus-visible:ring-offset-0 focus-visible:ring-transparent !important;
   }
   .text-field {
-    @apply shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-inner  focus-visible:ring-offset-0 focus-visible:ring-transparent !important;
-
+    @apply shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:shadow-inner  focus-visible:ring-offset-0 focus-visible:ring-transparent !important;
   }
 }

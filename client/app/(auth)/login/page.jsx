@@ -8,9 +8,12 @@ import { fetchRoutes } from "@/constants";
 import { useRouter } from "next/navigation";
 import logo from "../../../public/logo.json";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import userAtom from "@/atom/userAtom";
 
 const Login = () => {
   const router = useRouter();
+  const [user, setUser] = useRecoilState(userAtom);
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
@@ -20,8 +23,23 @@ const Login = () => {
 
     try {
       const { data } = await axios.post(fetchRoutes.checkUser, { email });
+
       if (!data.status) {
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ newUser: true, email: email })
+        );
+        setUser({ newUser: true, email: email });
         router.push("/sign-up");
+      }
+
+      if (data.status) {
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ newUser: false, user: data })
+        );
+        setUser({ newUser: false, user: data });
+        router.push("/");
       }
     } catch (error) {
       console.log(error);

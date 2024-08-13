@@ -1,7 +1,8 @@
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/shared/theme/theme-provider";
 import "./globals.css";
-import ThemeButton from "@/components/shared/theme/ThemeButton";
+import { Toaster } from "@/components/ui/toaster";
+import RecoilContextProvider from "./recoilContextProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,8 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <RecoilContextProvider>{children}</RecoilContextProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -13,7 +13,7 @@ const SignUp = () => {
               <Lottie animationData={logo} />
               <h4 className="text-4xl pe-16">Buzzys</h4>
             </div>
-            <div className="w-80 ">
+            <div className="w-96 px-4 ">
               <SignUpForm />
             </div>
           </div>

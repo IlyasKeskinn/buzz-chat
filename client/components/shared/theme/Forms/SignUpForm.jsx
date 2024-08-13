@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,41 +11,69 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Textarea } from "@/components/ui/textarea";
-
-const formSchema = z.object({
-  username: z.string().min(3, {
-    message: "Username must be at least 2 characters.",
-  }),
-  bio: z.string().max(500, { message: "Bio must be most 500 characters." }),
-});
+import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { fetchRoutes } from "@/constants";
+import { useToast } from "@/components/ui/use-toast";
+import { signUpSchema } from "@/lib/validator";
+import AvatarEdit from "../../photo/AvatarEdit";
+import userAtom from "@/atom/userAtom";
+import axios from "axios";
 
 const SignUpForm = () => {
-  const form = useForm({ resolver: zodResolver(formSchema) });
+  const form = useForm({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      username: "",
+      bio: "",
+    },
+  });
 
-  function onSubmit(values) {
-    console.log(values);
+  const { toast } = useToast();
+
+  const [imgURL, setImgURL] = useState("");
+  const [user, setUser] = useRecoilState(userAtom);
+
+  async function onSubmit(values) {
+    try {
+      const { data } = await axios.post(fetchRoutes.createUser, {
+        email: user.email,
+        username: values.username,
+        bio: values.bio,
+        avatarURL: imgURL,
+      });
+    } catch (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error.response.data.error,
+        variant: "destructive",
+      });
+    }
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  placeholder="JohnDoe"
-                  {...field}
-                  className="input-field"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex items-center justify-between">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="JohnDoe"
+                    {...field}
+                    className="input-field"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <AvatarEdit imgURL={imgURL} setImgURL={setImgURL} />
+        </div>
         <FormField
           control={form.control}
           name="bio"
@@ -61,7 +90,7 @@ const SignUpForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full py-7  rounded-3xl">
+        <Button type="submit" className="w-full py-7 rounded-3xl text-xl">
           Sign Up
         </Button>
       </form>
