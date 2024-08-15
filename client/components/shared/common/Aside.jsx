@@ -1,10 +1,17 @@
-import React from "react";
-import Chat from "../chat/Chat";
+import { useRecoilValue } from "recoil";
+import Chats from "../chatlist/Chats";
+import menuAtom from "@/atom/menuAtom";
+import { MenuConst } from "@/constants";
+import Profile from "../profile/Profile";
+import Contacts from "../contacts/Contacts";
 
 const Aside = () => {
+  const activeMenu = useRecoilValue(menuAtom);
   return (
-    <aside className="md:order-2 order-1 md:max-w-[300px] max-w-[100%] w-full md:max-h-[100%] h-[100%] bg-secondary/50 shadow-lg">
-      <Chat />
+    <aside className="md:order-2 order-1 md:max-w-[300px] max-w-[100%] w-full md:max-h-[100%] h-[100%] bg-secondary/50 z-10">
+      {activeMenu === MenuConst.DEFAULTMENU && <Chats />}
+      {activeMenu === MenuConst.PROFILE && <Profile />}
+      {activeMenu === MenuConst.CONTACTS && <Contacts />}
     </aside>
   );
 };

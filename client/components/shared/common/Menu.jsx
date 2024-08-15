@@ -15,7 +15,7 @@ const Menu = ({ user }) => {
   const activeMenu = useRecoilValue(menuAtom);
 
   return (
-    <div className="md:max-w-[80px] max-w-[100%] w-full md:max-h-screen max-h-[70px] md:order-1 order-2 bg-secondary">
+    <div className="md:max-w-[80px] max-w-[100%] w-full md:max-h-screen max-h-[10%] md:order-1 order-2 bg-secondary z-100">
       <div className="flex h-full md:flex-col flex-row justify-center md:justify-between items-center py-5 px-2">
         <div className="md:block hidden">
           <div className="rounded-full w-20 h-20 overflow-hidden">
