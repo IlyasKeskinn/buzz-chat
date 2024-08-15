@@ -1,7 +1,7 @@
 "use client";
 import Lottie from "lottie-react";
 import logo from "../../../public/logo.json";
-import SignUpForm from "@/components/shared/theme/Forms/SignUpForm";
+import SignUpForm from "@/components/shared/common/Forms/SignUpForm";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
