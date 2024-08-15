@@ -14,14 +14,16 @@ import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
-import { fetchRoutes } from "@/constants";
 import { useToast } from "@/components/ui/use-toast";
 import { signUpSchema } from "@/lib/validator";
-import AvatarEdit from "../../photo/AvatarEdit";
+import { useRouter } from "next/navigation";
 import userAtom from "@/atom/userAtom";
-import axios from "axios";
+import createUser from "@/lib/actions/user.actions";
+import AvatarEdit from "../../photo/AvatarEdit";
+import { Spinner } from "@/components/ui/spinner";
 
 const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -34,21 +36,40 @@ const SignUpForm = () => {
 
   const [imgURL, setImgURL] = useState("");
   const [user, setUser] = useRecoilState(userAtom);
+  const [loading, setLoading] = useState(false);
 
   async function onSubmit(values) {
+    if (loading) return;
     try {
-      const { data } = await axios.post(fetchRoutes.createUser, {
-        email: user.email,
+      setLoading(true);
+      const createdUser = await createUser({
+        email: user.userInfo.email,
         username: values.username,
         bio: values.bio,
         avatarURL: imgURL,
       });
-    } catch (error) {
+
+      if (createdUser) {
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ newUser: false, userInfo: createdUser })
+        );
+        setUser({ newUser: false, userInfo: createdUser });
+        router.push("/");
+      }
+    } catch (err) {
+      let message =
+        typeof err.response !== "undefined"
+          ? err.response.data.error
+          : err.message;
+
       toast({
         title: "Uh oh! Something went wrong.",
-        description: error.response.data.error,
+        description: message,
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -90,9 +111,21 @@ const SignUpForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full py-7 rounded-3xl text-xl">
-          Sign Up
-        </Button>
+        <div className="flex flex-col justify-center gap-2">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full py-7 rounded-3xl text-xl "
+          >
+            Sign Up
+            {loading && <Spinner color="fuchsia-50" />}
+          </Button>
+          {loading && (
+            <p className="text-center text-xs font-light">
+              Profile is being prepared...
+            </p>
+          )}
+        </div>
       </form>
     </Form>
   );

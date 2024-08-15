@@ -28,10 +28,18 @@ const loaderVariants = cva("animate-spin text-primary", {
   },
 });
 
-export function Spinner({ size, show, children, className }) {
+export function Spinner({
+  size,
+  show,
+  children,
+  className,
+  color = "foreground",
+}) {
   return (
     <span className={spinnerVariants({ show })}>
-      <Loader2 className={cn(loaderVariants({ size }), className)} />
+      <Loader2
+        className={` ${cn(loaderVariants({ size }), className)}  text-${color} ms-4`}
+      />
       {children}
     </span>
   );

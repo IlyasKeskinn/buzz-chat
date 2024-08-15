@@ -2,8 +2,19 @@
 import Lottie from "lottie-react";
 import logo from "../../../public/logo.json";
 import SignUpForm from "@/components/shared/theme/Forms/SignUpForm";
+import { firebaseAuth } from "@/utils/FirebaseConfig";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const SignUp = () => {
+  const router = useRouter();
+  const currentUser = firebaseAuth.currentUser;
+  useEffect(() => {
+    if (!currentUser) {
+      router.push("/login");
+    }
+  }, [currentUser]);
+
   return (
     <main>
       <section className="px-5">

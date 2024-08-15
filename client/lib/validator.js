@@ -7,7 +7,8 @@ export const signUpSchema = z.object({
     .min(3, {
       message: "Username must be at least 3 characters.",
     })
-    .max(50, { message: "Usernmae must be most 50 characters" }),
+    .max(50, { message: "Usernmae must be most 50 characters" })
+    .regex(/^\S+$/, { message: "Username cannot contain spaces." }), // No spaces allowed
   bio: z
     .string()
     .max(500, { message: "Bio must be most 500 characters." })

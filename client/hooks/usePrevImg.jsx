@@ -42,6 +42,7 @@ const usePrevImg = (imgURL, setImgURL) => {
       });
     }
   };
+  
 
   return { handleImageChange };
 };

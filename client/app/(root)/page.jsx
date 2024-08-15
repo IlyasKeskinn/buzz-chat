@@ -11,9 +11,7 @@ import { useRecoilState } from "recoil";
 const SidebarMenuItem = ({ active, label }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [user, setUser] = useRecoilState(userAtom);
-  
-  console.log(user);
-  
+
 
   return (
     <div
@@ -34,22 +32,22 @@ const SidebarMenuItem = ({ active, label }) => {
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex">
-      <aside className="md:max-w-20 flex-1 bg-secondary">
-        <div className="flex h-full md:flex-col flex-row justify-between items-center py-5 px-2">
-          <div>
-            <div className="rounded-full w-20 h-20 overflow-hidden">
-              <Image alt="logo" src={"/logo.png"} height={256} width={256} />
+      <main className="min-h-screen flex">
+        <aside className="md:max-w-20 flex-1 bg-secondary">
+          <div className="flex h-full md:flex-col flex-row justify-between items-center py-5 px-2">
+            <div>
+              <div className="rounded-full w-20 h-20 overflow-hidden">
+                <Image alt="logo" src={"/logo.png"} height={256} width={256} />
+              </div>
+            </div>
+            <div>
+              <SidebarMenuItem active={false} />
+            </div>
+            <div>
+              <ThemeButton />
             </div>
           </div>
-          <div>
-            <SidebarMenuItem active={false} />
-          </div>
-          <div>
-            <ThemeButton />
-          </div>
-        </div>
-      </aside>
-    </main>
+        </aside>
+      </main>
   );
 }
