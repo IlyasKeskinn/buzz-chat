@@ -77,6 +77,11 @@ const Login = () => {
                 </Button>
               </div>
             </div>
+            <div>
+              <p className="text-sm">
+                Dive into the hive of lively chats and make new connections!
+              </p>
+            </div>
           </div>
         </div>
       </section>
