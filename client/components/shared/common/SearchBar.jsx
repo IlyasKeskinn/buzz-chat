@@ -4,7 +4,7 @@ import { IoIosSearch } from "react-icons/io";
 const SearchBar = () => {
   const {theme} = useTheme();
   return (
-    <div className="p-4 my-5">
+    <div className="p-4">
       <div
         className={`flex gap-4 items-center border border-bee/10 rounded-xl ${theme === "light" ? "bg-muted/80" : "bg-muted/10"}`}
       >

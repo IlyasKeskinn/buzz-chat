@@ -5,7 +5,7 @@ import ChatListItem from "./ChatListItem";
 
 const ChatList = () => {
   return (
-    <div className="overflow-auto md:h-[100vh] h-[60vh]">
+    <div className="overflow-auto md:h-[80vh] h-[65vh]">
       <ChatListItem />
       <ChatListItem />
       <ChatListItem />
