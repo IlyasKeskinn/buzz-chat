@@ -10,7 +10,7 @@
     --foreground: 222.2 84% 4.9%;
 
     --muted: 56 50% 95%;
-    --muted-foreground: 56 10% 25%;
+    --muted-foreground: 224, 9%, 44%;
 
     --popover: 56 45% 96.5%;
     --popover-foreground: 56 10% 17.5%;
@@ -21,7 +21,7 @@
     --border: 56 50% 85%;
     --input: 0 0% 90%;
 
-    --primary: 50 100% 50%; 
+    --primary: 50 100% 50%;
     --primary-foreground: 60 10% 10%;
 
     --secondary: 41 87% 85%;
@@ -87,5 +87,8 @@
   }
   .text-field {
     @apply shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:shadow-inner  focus-visible:ring-offset-0 focus-visible:ring-transparent !important;
+  }
+  .search-field {
+    @apply bg-transparent appearance-none placeholder:text-muted-foreground  w-full py-3 px-4  focus:outline-none ring-offset-0  focus-visible:ring-offset-0 focus-visible:ring-transparent !important;
   }
 }

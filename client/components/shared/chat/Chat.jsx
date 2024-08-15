@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import ChatHeader from "./ChatHeader";
+import SearchBar from "../common/SearchBar";
 
 const Chat = () => {
   return (
-    <div>Chat</div>
-  )
-}
+    <>
+      <ChatHeader />
+      <SearchBar/>
+    </>
+  );
+};
 
-export default Chat
+export default Chat;
