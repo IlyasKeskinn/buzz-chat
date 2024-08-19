@@ -18,7 +18,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { signUpSchema } from "@/lib/validator";
 import { useRouter } from "next/navigation";
 import userAtom from "@/atom/userAtom";
-import createUser from "@/lib/actions/user.actions";
+import {createUser} from "@/lib/actions/user.actions";
 import AvatarEdit from "../../photo/AvatarEdit";
 import { Spinner } from "@/components/ui/spinner";
 

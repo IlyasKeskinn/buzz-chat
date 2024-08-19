@@ -1,15 +1,10 @@
 "use server";
 import { connectToDatabase } from "../database";
 import { login } from "../lib";
-import {
-  getStorage,
-  getDownloadURL,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { firebaseStorage } from "@/utils/FirebaseConfig";
-import User from "../database/models/user.model";
 import { dataURLtoBlob } from "../helpers/dataURLtoBlob";
+import User from "../database/models/user.model";
 
 export async function checkUser(email) {
   connectToDatabase();
@@ -28,7 +23,7 @@ export async function checkUser(email) {
   }
 }
 
-export default async function createUser(data) {
+export async function createUser(data) {
   await connectToDatabase();
   const { email, username, bio } = data;
   let { avatarURL } = data;
@@ -70,6 +65,16 @@ export default async function createUser(data) {
     login(newUser._id);
 
     return JSON.parse(JSON.stringify(newUser));
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function getAllUsers() {
+  await connectToDatabase();
+  try {
+    const users = await User.find();
+    return JSON.parse(JSON.stringify(users));
   } catch (error) {
     throw new Error(error);
   }

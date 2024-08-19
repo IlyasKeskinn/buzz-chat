@@ -1,28 +1,33 @@
-import React from "react";
+import userAtom from "@/atom/userAtom";
+import { calculateTime } from "@/utils/CalculateTime";
+import { useRecoilValue } from "recoil";
 
 const Message = ({ message }) => {
+  const user = useRecoilValue(userAtom);
+  
+
   return (
     <div
       className={`flex ${
-        message.sender === "sender" ? "justify-end" : "justify-start"
+        message.sender !== user.userInfo._id ? "justify-start" : "justify-end"
       } mb-2`}
     >
       <div className="relative max-w-md p-5">
         <div
-          className={`px-4 py-2 rounded-xl shadow-lg  ${
-            message.sender === "sender"
-              ? "bg-primary text-primary-foreground rounded-br-none"
-              : "bg-secondary text-secondary-foreground rounded-bl-none"
+          className={`px-4 py-2 rounded-xl shadow-lg break-words  ${
+            message.sender !== user.userInfo._id
+              ? "bg-secondary text-secondary-foreground rounded-bl-none"
+              : "bg-primary text-primary-foreground rounded-br-none"
           }`}
         >
-          <p className="p-1">{message.text}</p>
+          <p className="p-1">{message.message}</p>
         </div>
         <p
           className={`text-xs text-muted-foreground ${
-            message.sender === "sender" ? "text-end" : "text-start"
+            message.sender !== user.userInfo._id ? "text-start" : "text-end"
           }`}
         >
-          15.03
+          {calculateTime(message.createdAt)}
         </p>
       </div>
     </div>

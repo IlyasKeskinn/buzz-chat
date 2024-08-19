@@ -1,4 +1,3 @@
-import { MenuConst } from "@/constants";
 import { atom } from "recoil";
 
 const menuAtom = atom({

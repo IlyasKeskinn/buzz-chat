@@ -1,16 +1,17 @@
-import React from "react";
 import ChatHeader from "./ChatHeader";
 import ChatContainer from "./ChatContainer";
 import MessageBar from "./MessageBar";
-const Chat = () => {
+const Chat = ({ socket }) => {
   return (
-    <div className="md:block hidden md:order-3 border-l border-b bg-background  max-w-[100%] w-full md:max-h-[100%] h-[100%] ">
-      <div>
-        <ChatHeader />
-        <ChatContainer />
-        <MessageBar />
+    <>
+      <div className="md:block  md:order-3 border-l border-b border-b-bee bg-background  max-w-[100%] w-full md:max-h-[100%] h-[100vh] ">
+        <div>
+          <ChatHeader />
+          <ChatContainer />
+          <MessageBar socket={socket} />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

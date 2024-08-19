@@ -1,9 +1,9 @@
-import React from 'react'
-
 const ContactsHeader = () => {
   return (
-    <div>ContactsHeader</div>
-  )
-}
+    <div className="w-full p-5">
+      <h5 className="text-2xl font-semibold">Contacts</h5>
+    </div>
+  );
+};
 
-export default ContactsHeader
+export default ContactsHeader;
