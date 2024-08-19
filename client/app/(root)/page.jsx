@@ -11,6 +11,7 @@ import Aside from "@/components/shared/common/Aside";
 import Menu from "@/components/shared/common/Menu";
 import PageLoading from "@/components/shared/common/PageLoading";
 import Empty from "@/components/shared/Empty";
+import { updateMessageStatusToDelivered } from "@/lib/actions/messages.actions";
 
 export default function Home() {
   const user = useRecoilValue(userAtom);
@@ -20,15 +21,18 @@ export default function Home() {
   const [socketEvent, setSocketEvent] = useState(false);
   const socket = useRef(null);
   const audioRef = useRef(null);
-
   useEffect(() => {
-    if (user?.userInfo._id && !socket.current) {
-      socket.current = io("http://localhost:3000", {
-        transports: ["websocket"],
-      });
-      socket.current.emit("add-user", user.userInfo._id);
-      setSocket(socket.current.id);
-    }
+    const addUserSocket = async () => {
+      if (user?.userInfo._id && !socket.current) {
+        socket.current = io("http://localhost:3000", {
+          transports: ["websocket"],
+        });
+        socket.current.emit("add-user", user.userInfo._id);
+        await updateMessageStatusToDelivered(user.userInfo._id);
+        setSocket(socket.current.id);
+      }
+    };
+    addUserSocket();
   }, [socket.current, user]);
 
   useEffect(() => {
@@ -46,7 +50,12 @@ export default function Home() {
 
   return (
     <>
-      <audio ref={audioRef} preload="auto" className="hidden" src="/sounds/newMessage.mp3" />
+      <audio
+        ref={audioRef}
+        preload="auto"
+        className="hidden"
+        src="/sounds/newMessage.mp3"
+      />
       {!user && <PageLoading />}
       {user && (
         <main className="flex md:flex-row flex-col h-screen w-screen max-h-screen max-w-full overflow-hidden">

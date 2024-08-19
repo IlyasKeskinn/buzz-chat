@@ -5,16 +5,18 @@ import { getMessages } from "@/lib/actions/messages.actions";
 import { useRecoilState, useRecoilValue } from "recoil";
 import currentChatAtom from "@/atom/currentChatAtom";
 import messageAtom from "@/atom/messageaAtom";
+import userAtom from "@/atom/userAtom";
 
 const ChatContainer = () => {
   const [messages, setMessages] = useRecoilState(messageAtom);
   const chatRoom = useRecoilValue(currentChatAtom);
+  const user = useRecoilValue(userAtom);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const fetchMessage = async () => {
       try {
-        const messageData = await getMessages(chatRoom._id);
+        const messageData = await getMessages(chatRoom._id, user.userInfo._id);
         setMessages(messageData);
         scrollToBottom();
       } catch (error) {
@@ -26,6 +28,7 @@ const ChatContainer = () => {
 
   useEffect(() => {
     scrollToBottom();
+    
   }, [messages]);
 
   const scrollToBottom = () => {

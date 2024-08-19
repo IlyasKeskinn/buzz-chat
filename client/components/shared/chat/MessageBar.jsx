@@ -39,6 +39,7 @@ const MessageBar = ({ socket }) => {
         text: text,
       });
       socket.emit("send-msg", {
+        chatRoomId: currentChat._id,
         message: newMessage,
         recieverUser: recieverUser._id,
       });

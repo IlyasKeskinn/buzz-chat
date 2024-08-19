@@ -1,10 +1,10 @@
 import userAtom from "@/atom/userAtom";
 import { calculateTime } from "@/utils/CalculateTime";
 import { useRecoilValue } from "recoil";
+import MessageStatus from "../common/MessageStatus";
 
 const Message = ({ message }) => {
   const user = useRecoilValue(userAtom);
-  
 
   return (
     <div
@@ -21,14 +21,17 @@ const Message = ({ message }) => {
           }`}
         >
           <p className="p-1">{message.message}</p>
+          <div className="flex justify-between px-1 gap-8">
+            <MessageStatus recipients={message.recipientStatuses} />
+            <div
+              className={`text-xs text-gray-500 ${
+                message.sender !== user.userInfo._id ? "text-start" : "text-end"
+              }`}
+            >
+              {calculateTime(message.createdAt)}
+            </div>
+          </div>
         </div>
-        <p
-          className={`text-xs text-muted-foreground ${
-            message.sender !== user.userInfo._id ? "text-start" : "text-end"
-          }`}
-        >
-          {calculateTime(message.createdAt)}
-        </p>
       </div>
     </div>
   );

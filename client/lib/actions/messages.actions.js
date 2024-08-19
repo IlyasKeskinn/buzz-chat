@@ -51,7 +51,7 @@ export async function createMessage(data) {
   }
 }
 
-export async function getMessages(chatRoomId) {
+export async function getMessages(chatRoomId, fetchingUserId) {
   try {
     await connectToDatabase();
 
@@ -66,8 +66,51 @@ export async function getMessages(chatRoomId) {
 
     const messages = await Message.find({ chatRoom: chatRoom._id });
 
+    for (const message of messages) {
+      let updated = false;
+      message.recipientStatuses.forEach((recipient) => {
+        if (
+          recipient.userId.equals(fetchingUserId) &&
+          recipient.status !== "read"
+        ) {
+          recipient.status = "read";
+          updated = true;
+        }
+      });
+      if (updated) await message.save();
+    }
+
     return JSON.parse(JSON.stringify(messages));
   } catch (error) {
     throw new Error(error);
+  }
+}
+
+export async function updateMessageStatusToDelivered(userId) {
+  try {
+    await connectToDatabase();
+
+    const matchingMessages = await Message.find({
+      "recipientStatuses.userId": userId,
+    });
+
+    if (matchingMessages.length <= 0) {
+      console.log("No messages found for updating.");
+      return;
+    }
+
+    for (const message of matchingMessages) {
+      let updated = false;
+
+      message.recipientStatuses.forEach((recipient) => {
+        if (recipient.userId.equals(userId) && recipient.status === "sent") {
+          (recipient.status = "delivered"), (updated = true);
+        }
+      });
+      if (updated) await message.save();
+    }
+    console.log(`${matchingMessages.length} messages updated to delivered.`);
+  } catch (error) {
+    console.error("Error updating messages:", error);
   }
 }

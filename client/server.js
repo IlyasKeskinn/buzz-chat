@@ -13,7 +13,7 @@ global.onlineUsers = new Map();
 
 app.prepare().then(() => {
   const httpServer = createServer(handler);
-  const io = new Server(httpServer,{
+  const io = new Server(httpServer, {
     maxHttpBufferSize: 1e8, // Increase maximum HTTP buffer size
     pingTimeout: 60000, // Set the ping timeout to 60 seconds
     transports: ["websocket", "polling"], // Allow both WebSocket and long polling transports
@@ -26,7 +26,7 @@ app.prepare().then(() => {
     });
 
     socket.on("send-msg", (data) => {
-      const { recieverUser, message } = data;
+      const { recieverUser, message, chatRoomId } = data;
       const sendUserSocket = onlineUsers.get(recieverUser);
 
       if (sendUserSocket) {
