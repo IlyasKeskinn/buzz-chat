@@ -1,27 +1,34 @@
-import { MdOutlineEmojiEmotions } from "react-icons/md";
-import { ImAttachment } from "react-icons/im";
 import { HiOutlineMicrophone } from "react-icons/hi2";
-import { IoIosSearch } from "react-icons/io";
 import { LuSendHorizonal } from "react-icons/lu";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
-import { createMessage } from "@/lib/actions/messages.actions";
+import {
+  createMessage,
+  sendImageMessage,
+} from "@/lib/actions/messages.actions";
 import { useToast } from "@/components/ui/use-toast";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import EmojiPicker from "emoji-picker-react";
 import userAtom from "@/atom/userAtom";
 import currentChatAtom from "@/atom/currentChatAtom";
 import messageAtom from "@/atom/messageaAtom";
+import SendPhotoDialog from "./SendPhotoDialog";
+import { SendPhotoDropdown } from "../common/SendPhotoDropdown";
+import { MdOutlineEmojiEmotions } from "react-icons/md";
 
 const MessageBar = ({ socket }) => {
   const { theme } = useTheme();
-  const [text, setText] = useState("");
   const { toast } = useToast();
+
+  const [text, setText] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [imgURL, setImgURL] = useState("");
+  const emojiPickerRef = useRef(null);
+
   const user = useRecoilValue(userAtom);
   const setMessages = useSetRecoilState(messageAtom);
   const currentChat = useRecoilValue(currentChatAtom);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const emojiPickerRef = useRef(null);
 
   const recieverUser = currentChat.participants.find(
     (member) => member._id !== user.userInfo._id
@@ -81,17 +88,43 @@ const MessageBar = ({ socket }) => {
     return () => document.addEventListener("mousedown", handleClickOutside);
   }, [showEmojiPicker]);
 
+  const sendImage = async () => {
+    if (!imgURL || loading) return;
+    try {
+      setLoading(true);
+      const newMessage = await sendImageMessage({
+        senderId: user.userInfo._id,
+        chatRoomId: currentChat._id,
+        image: imgURL,
+      });
+      socket.emit("send-msg", {
+        chatRoomId: currentChat._id,
+        recieverUser: recieverUser._id,
+        message: newMessage,
+      });
+      setMessages((prevMsg) => [...prevMsg, newMessage]);
+      setImgURL("");
+      setLoading(false);
+    } catch (error) {
+      if (error instanceof Error) {
+        return toast({
+          title: "Uh oh! Something went wrong.",
+          description: error.message,
+        });
+      }
+    }
+  };
+
   return (
     <div className="w-full h-[8vh] flex items-center gap-4 relative px-5 ">
       <>
-        <div className="flex gap-6 ">
+        <div className="flex gap-6 text-">
           <MdOutlineEmojiEmotions
             className="text-xl cursor-pointer"
             onClick={() => {
               setShowEmojiPicker(!showEmojiPicker);
             }}
           />
-          <ImAttachment className="text-xl cursor-pointer" />
         </div>
         <div className="w-full rounded-lg h-10 flex items-center">
           <div className="px-4 w-full">
@@ -100,9 +133,6 @@ const MessageBar = ({ socket }) => {
                 theme === "light" ? "bg-muted/80" : "bg-muted/10"
               }`}
             >
-              <div className="px-4 w-6">
-                <IoIosSearch />
-              </div>
               <div className="w-full">
                 <input
                   onChange={(e) => handleChange(e)}
@@ -126,16 +156,11 @@ const MessageBar = ({ socket }) => {
                   />
                 </div>
               ) : (
-                <div
-                  className={`p-2 me-8 ${
-                    text && "rounded-full bg-primary"
-                  } cursor-pointer`}
-                >
-                  <HiOutlineMicrophone
-                    className={`text-xl ${
-                      text ? "text-black" : "text-foreground"
-                    }`}
-                  />
+                <div className="flex justify-center items-center p-2 me-8 gap-5">
+                  <SendPhotoDropdown imgURL={imgURL} setImgURL={setImgURL} />
+                  <div>
+                    <HiOutlineMicrophone className={`text-xl`} />
+                  </div>
                 </div>
               )}
             </div>
@@ -148,6 +173,14 @@ const MessageBar = ({ socket }) => {
               onEmojiClick={onEmojiClick}
             />
           </div>
+        )}
+        {imgURL && (
+          <SendPhotoDialog
+            imgURL={imgURL}
+            setImgURL={setImgURL}
+            sendImage={sendImage}
+            loading={loading}
+          />
         )}
       </>
     </div>

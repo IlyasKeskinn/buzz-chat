@@ -38,7 +38,7 @@ export function Spinner({
   return (
     <span className={spinnerVariants({ show })}>
       <Loader2
-        className={` ${cn(loaderVariants({ size }), className)}  text-${color} ms-4`}
+        className={` ${cn(loaderVariants({ size }), className)}  text-${color}`}
       />
       {children}
     </span>

@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -106,12 +107,14 @@ const CapturePhoto = ({ open, setOpen, setImgURL }) => {
             </div>
           </div>
           <div className="flex justify-center items-center">
-            <div
+            <Button
+              disabled={loading}
+              variant="ghost"
               className="h-16 w-16 rounded-full border-2 flex justify-center items-center cursor-pointer border-rose-300  hover:bg-rose-50 shadow-lg transition-all duration-300"
               onClick={capturePhoto}
             >
               <CiCamera className="text-3xl font-extrabold" />
-            </div>
+            </Button>
           </div>
         </DialogHeader>
         <DialogFooter className="sm:justify-start"></DialogFooter>

@@ -121,7 +121,7 @@ const SignUpForm = () => {
             {loading && <Spinner color="fuchsia-50" />}
           </Button>
           {loading && (
-            <p className="text-center text-xs font-light">
+            <p className="text-center text-xs font-light animate-pulse">
               Profile is being prepared...
             </p>
           )}

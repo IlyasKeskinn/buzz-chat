@@ -78,7 +78,7 @@ const Login = () => {
               </div>
             </div>
             <div>
-              <p className="text-sm">
+              <p className="text-sm text-center animate-pulse">
                 Dive into the hive of lively chats and make new connections!
               </p>
             </div>

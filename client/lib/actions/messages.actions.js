@@ -2,7 +2,9 @@
 import { connectToDatabase } from "../database";
 import ChatRoom from "../database/models/chatRoom.model";
 import Message from "../database/models/message.model";
-
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { firebaseStorage } from "@/utils/FirebaseConfig";
+import { dataURLtoBlob } from "../helpers/dataURLtoBlob";
 export async function createMessage(data) {
   const { senderId, text, chatRoomId } = data;
 
@@ -42,6 +44,69 @@ export async function createMessage(data) {
       sender: senderId,
       chatRoom: chatRoomId,
       message: text,
+      recipientStatuses,
+    });
+
+    return JSON.parse(JSON.stringify(newMessage));
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function sendImageMessage(data) {
+  const { senderId, chatRoomId, image } = data;
+  let uploadedImage = "";
+
+  try {
+    await connectToDatabase();
+    if (!senderId) {
+      throw new Error("User is required");
+    }
+
+    if (!image) {
+      throw new Error("Image required!");
+    }
+
+    if (!chatRoomId) {
+      throw new Error("ChatRoomId is required");
+    }
+
+    const chatRoom = await ChatRoom.findById(chatRoomId);
+
+    if (!chatRoom) {
+      throw new Error("Chat is required");
+    }
+
+    const receiverUsers = chatRoom.participants.filter(
+      (member) => member._id.toString() !== senderId
+    );
+
+    const recipientStatuses = receiverUsers.map((recieverUser) => {
+      const isOnline = global.onlineUsers.has(recieverUser._id.toString());
+      return {
+        userId: recieverUser._id,
+        status: isOnline ? "delivered" : "sent",
+      };
+    });
+
+    const randomNumber = Math.floor(Math.random()) * 10000;
+    if (image) {
+      const storageRef = ref(
+        firebaseStorage,
+        `/photos/${chatRoomId}.${randomNumber}.jpg`
+      );
+      const blob = dataURLtoBlob(image);
+
+      const snapshot = await uploadBytesResumable(storageRef, blob);
+      const downloadURL = await getDownloadURL(storageRef);
+      uploadedImage = downloadURL;
+    }
+
+    const newMessage = await Message.create({
+      sender: senderId,
+      chatRoom: chatRoomId,
+      message: uploadedImage,
+      messageType: "image",
       recipientStatuses,
     });
 
