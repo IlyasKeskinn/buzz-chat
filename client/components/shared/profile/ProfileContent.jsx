@@ -8,8 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import ContactItem from "../contacts/ContactItem";
-import { AccordionHeader } from "@radix-ui/react-accordion";
 import BlockedUserTile from "../common/BlockedUserTile";
 import { Button } from "@/components/ui/button";
 

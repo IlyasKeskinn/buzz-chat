@@ -6,6 +6,13 @@ import { useRecoilState } from "recoil";
 import { useToast } from "@/components/ui/use-toast";
 import currentChatAtom from "@/atom/currentChatAtom";
 import receiverAtom from "@/atom/receiverAtom";
+import {
+  Dialog,
+  DialogHeader,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import UserProfileDialog from "../common/UserProfileDialog";
 const ContactItem = ({ user }) => {
   const [chatRoom, setChatRoom] = useRecoilState(currentChatAtom);
   const [receiver, setReceiverUser] = useRecoilState(receiverAtom);
@@ -28,27 +35,35 @@ const ContactItem = ({ user }) => {
   };
 
   return (
-    <div
-      onClick={handleChatRoom}
-      className="mx-2 py-3 rounded hover:bg-bee/10 cursor-pointer transition-colors duration-100"
-    >
-      <div>
-        <div className="w-full p-4">
-          <div className="flex w-full gap-4 justify-between">
-            <div className="flex justify-center items-center">
-              <Avatar size="sm" imgURL={user.avatarURL} />
+    <div className="rounded-xl hover:bg-bee/10 transition-colors duration-150 my-5 mx-2 ps-2 p-2">
+      <div className="w-full">
+        <div className="">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <UserProfileDialog
+                user={user}
+                trigger={
+                  <div className="flex justify-center items-center">
+                    <Avatar size="sm" imgURL={user.avatarURL} />
+                  </div>
+                }
+              />
             </div>
-            <div className="flex flex-col justify-center gap-2 w-full">
-              <div className="flex justify-between items-center">
+            <div className="w-full flex justify-between">
+              <div
+                className="cursor-pointer flex items-center flex-1"
+                onClick={handleChatRoom}
+              >
                 <p className="text-base">
                   {user.username.charAt(0).toUpperCase() +
                     user.username.slice(1).toLowerCase()}
                 </p>
-                <div>
-                  <Button className="rounded-xl">
-                    <TiUserAddOutline />
-                  </Button>
-                </div>
+              </div>
+
+              <div>
+                <Button className="rounded-xl">
+                  <TiUserAddOutline />
+                </Button>
               </div>
             </div>
           </div>
