@@ -1,9 +1,13 @@
-import React from 'react'
+import ProfileContent from "./ProfileContent";
+import ProfileHeader from "./ProfileHeader";
 
 const Profile = () => {
   return (
-    <div>Profile</div>
-  )
-}
+    <>
+      <ProfileHeader />
+      <ProfileContent />
+    </>
+  );
+};
 
-export default Profile
+export default Profile;
