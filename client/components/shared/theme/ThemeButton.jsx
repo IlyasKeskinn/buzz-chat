@@ -11,7 +11,7 @@ const ThemeButton = () => {
   };
   return (
     <div
-      className="md:block hidden rounded-xl py-6 px-5 cursor-pointer"
+      className="rounded-xl py-6 px-5 cursor-pointer"
       onClick={handleTheme}
     >
       {theme === "light" ? (

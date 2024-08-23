@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import currentChatAtom from "@/atom/currentChatAtom";
 import messageAtom from "@/atom/messageaAtom";
 import userAtom from "@/atom/userAtom";
+import EmptyChat from "./EmptyChat";
 
 const ChatContainer = () => {
   const [messages, setMessages] = useRecoilState(messageAtom);
@@ -28,7 +29,6 @@ const ChatContainer = () => {
 
   useEffect(() => {
     scrollToBottom();
-    
   }, [messages]);
 
   const scrollToBottom = () => {
@@ -37,7 +37,7 @@ const ChatContainer = () => {
   return (
     <div className="h-[82vh] overflow-auto">
       {messages.length <= 0 ? (
-        <Empty />
+        <EmptyChat />
       ) : (
         messages.map((message) => (
           <Message key={message._id} message={message} />

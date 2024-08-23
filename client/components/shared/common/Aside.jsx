@@ -5,6 +5,7 @@ import { MenuConst } from "@/constants";
 import Profile from "../profile/Profile";
 import Contacts from "../contacts/Contacts";
 import currentChatAtom from "@/atom/currentChatAtom";
+import Settings from "../settings/Settings";
 
 const Aside = () => {
   const activeMenu = useRecoilValue(menuAtom);
@@ -20,6 +21,7 @@ const Aside = () => {
       {activeMenu === MenuConst.DEFAULTMENU && <Chats />}
       {activeMenu === MenuConst.PROFILE && <Profile />}
       {activeMenu === MenuConst.CONTACTS && <Contacts />}
+      {activeMenu === MenuConst.SETTINGS && <Settings />}
     </aside>
   );
 };
