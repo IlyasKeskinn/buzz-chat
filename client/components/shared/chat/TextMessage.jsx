@@ -1,8 +1,8 @@
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
-import Image from "next/image";
 
-const ImageMessage = ({ message, user }) => {
+
+const TextMessage = ({ user, message }) => {
   return (
     <div
       className={`flex ${
@@ -11,21 +11,13 @@ const ImageMessage = ({ message, user }) => {
     >
       <div className="relative max-w-md p-5">
         <div
-          className={`p-1 rounded-xl shadow-lg break-words  ${
+          className={`px-4 py-2 rounded-xl shadow-lg break-words  ${
             message.sender !== user.userInfo._id
               ? "bg-secondary text-secondary-foreground rounded-bl-none"
               : "bg-primary text-primary-foreground rounded-br-none"
           }`}
         >
-          <div className="p-1 w-full object-cover object-center rounded-xl">
-            <Image
-              src={message.message}
-              alt={message.message}
-              width={300}
-              height={300}
-              className="rounded-xl w-auto h-auto"
-            />
-          </div>
+          <p className="p-1">{message.message}</p>
           <div className="flex justify-between px-1 gap-8">
             {message.sender === user.userInfo._id && (
               <MessageStatus recipients={message.recipientStatuses} />
@@ -44,4 +36,4 @@ const ImageMessage = ({ message, user }) => {
   );
 };
 
-export default ImageMessage;
+export default TextMessage;

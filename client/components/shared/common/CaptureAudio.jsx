@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FaPlay } from "react-icons/fa";
 import { FaStop } from "react-icons/fa";
@@ -8,7 +8,12 @@ import { IoIosPause } from "react-icons/io";
 import { HiOutlineMicrophone } from "react-icons/hi2";
 import WaveSurfer from "wavesurfer.js";
 
-const CaptureAudio = ({ setShowCaptureAudio, sendVoiceMessage }) => {
+const CaptureAudio = ({
+  setShowCaptureAudio,
+  sendVoiceMessage,
+  voiceLoading,
+  setVoiceLoading,
+}) => {
   const { theme } = useTheme();
   const [isRecording, setRecording] = useState(true);
   const [recordedAudio, setRecordedAudio] = useState(null);
@@ -64,15 +69,20 @@ const CaptureAudio = ({ setShowCaptureAudio, sendVoiceMessage }) => {
   useEffect(() => {
     if (recordedAudio) {
       const updatePlaybackTime = () => {
-        setCurrentPlaybackTime(recordedAudio.currentTime);
+        setCurrentPlaybackTime(waweForm.getCurrentTime());
       };
-      recordedAudio.addEventListener("timeupdate", updatePlaybackTime);
+      waweForm.on("audioprocess", updatePlaybackTime);
+
+      waweForm.on("finish", () => {
+        setCurrentPlaybackTime(0);
+      });
 
       return () => {
-        recordedAudio.removeEventListener("timeupdate", updatePlaybackTime);
+        waweForm.un("audioprocess", updatePlaybackTime);
+        waweForm.un("finish");
       };
     }
-  }, [recordedAudio]);
+  }, [recordedAudio, waweForm]);
 
   const handleStartRecording = async () => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -128,9 +138,7 @@ const CaptureAudio = ({ setShowCaptureAudio, sendVoiceMessage }) => {
   const handlePlayingAudio = () => {
     if (audioRef.current) {
       setCurrentPlaybackTime(0);
-      waweForm.stop();
       waweForm.play();
-      recordedAudio.play();
       setIsPlayingAudio(true);
     }
   };
@@ -138,7 +146,6 @@ const CaptureAudio = ({ setShowCaptureAudio, sendVoiceMessage }) => {
   const handleStopAudio = () => {
     if (audioRef.current) {
       waweForm.stop();
-      recordedAudio.pause();
       setIsPlayingAudio(false);
     }
   };
@@ -161,12 +168,13 @@ const CaptureAudio = ({ setShowCaptureAudio, sendVoiceMessage }) => {
     }
     setRecordedAudio(null);
     setShowCaptureAudio(false);
+    setVoiceLoading(false);
   };
 
   const handleSendVocie = () => {
-    console.log("handleSendVocie");
-
+    if (voiceLoading) return;
     sendVoiceMessage(recordedAudioBlob);
+    handleDeleteVoice();
   };
 
   return (
@@ -226,6 +234,7 @@ const CaptureAudio = ({ setShowCaptureAudio, sendVoiceMessage }) => {
                     )}
                     {recordedAudio && (
                       <div
+                        disabled={true}
                         className="p-2 rounded-full bg-primary cursor-pointer"
                         onClick={handleSendVocie}
                       >

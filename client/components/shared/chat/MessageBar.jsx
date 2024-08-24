@@ -27,6 +27,7 @@ const MessageBar = ({ socket }) => {
   const [text, setText] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [voiceLoading, setLoadingVoice] = useState(false);
   const [imgURL, setImgURL] = useState("");
   const [showCapturAudio, setShowCaptureAudio] = useState(false);
   const emojiPickerRef = useRef(null);
@@ -44,6 +45,7 @@ const MessageBar = ({ socket }) => {
     setShowEmojiPicker(false);
     setImgURL("");
     setLoading(false);
+    setLoadingVoice(false);
     setText("");
   }, [currentChat]);
 
@@ -130,8 +132,10 @@ const MessageBar = ({ socket }) => {
 
   const sendVoiceMessage = async (voiceBlob) => {
     let audioURL = "";
+    if (voiceLoading) return;
 
     try {
+      setLoadingVoice(true);
       if (voiceBlob) {
         const randomNumber = Math.floor(Math.random() * 100000);
         const storageRef = ref(
@@ -164,6 +168,8 @@ const MessageBar = ({ socket }) => {
           description: error.message,
         });
       }
+    } finally {
+      setLoadingVoice(false);
     }
   };
 
@@ -247,6 +253,8 @@ const MessageBar = ({ socket }) => {
         <CaptureAudio
           setShowCaptureAudio={setShowCaptureAudio}
           sendVoiceMessage={sendVoiceMessage}
+          voiceLoading={voiceLoading}
+          setVoiceLoading={setLoadingVoice}
         />
       )}
     </div>
