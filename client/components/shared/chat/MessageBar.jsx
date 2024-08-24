@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import {
   createMessage,
+  sendAudioMessage,
   sendImageMessage,
 } from "@/lib/actions/messages.actions";
 import { useToast } from "@/components/ui/use-toast";
@@ -16,6 +17,8 @@ import messageAtom from "@/atom/messageaAtom";
 import SendPhotoDialog from "./SendPhotoDialog";
 import CaptureAudio from "../common/CaptureAudio";
 import { SendPhotoDropdown } from "../common/SendPhotoDropdown";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { firebaseStorage } from "@/utils/FirebaseConfig";
 
 const MessageBar = ({ socket }) => {
   const { theme } = useTheme();
@@ -125,6 +128,45 @@ const MessageBar = ({ socket }) => {
     }
   };
 
+  const sendVoiceMessage = async (voiceBlob) => {
+    let audioURL = "";
+
+    try {
+      if (voiceBlob) {
+        const randomNumber = Math.floor(Math.random() * 100000);
+        const storageRef = ref(
+          firebaseStorage,
+          `recordings/${currentChat._id}.${randomNumber}.mp3`
+        );
+
+        const snapshot = await uploadBytesResumable(storageRef, voiceBlob);
+        const downloadURL = await getDownloadURL(storageRef);
+        audioURL = downloadURL;
+      }
+
+      const newMessage = await sendAudioMessage({
+        senderId: user.userInfo._id,
+        chatRoomId: currentChat._id,
+        audioURL: audioURL,
+      });
+
+      socket.emit("send-msg", {
+        chatRoomId: currentChat._id,
+        recieverUser: recieverUser._id,
+        message: newMessage,
+      });
+
+      setMessages((prevMsg) => [...prevMsg, newMessage]);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: "Uh oh! Something went wrong.",
+          description: error.message,
+        });
+      }
+    }
+  };
+
   return (
     <div className="w-full h-[8vh] flex items-center gap-1 relative px-4 ">
       {!showCapturAudio && (
@@ -202,7 +244,10 @@ const MessageBar = ({ socket }) => {
         />
       )}
       {showCapturAudio && (
-        <CaptureAudio setShowCaptureAudio={setShowCaptureAudio} />
+        <CaptureAudio
+          setShowCaptureAudio={setShowCaptureAudio}
+          sendVoiceMessage={sendVoiceMessage}
+        />
       )}
     </div>
   );

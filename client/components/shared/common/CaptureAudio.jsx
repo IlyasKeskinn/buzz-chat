@@ -8,7 +8,7 @@ import { IoIosPause } from "react-icons/io";
 import { HiOutlineMicrophone } from "react-icons/hi2";
 import WaveSurfer from "wavesurfer.js";
 
-const CaptureAudio = ({ setShowCaptureAudio }) => {
+const CaptureAudio = ({ setShowCaptureAudio, sendVoiceMessage }) => {
   const { theme } = useTheme();
   const [isRecording, setRecording] = useState(true);
   const [recordedAudio, setRecordedAudio] = useState(null);
@@ -16,6 +16,7 @@ const CaptureAudio = ({ setShowCaptureAudio }) => {
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(0);
   const [audioTotalDuration, setAudioTotalDuration] = useState(0);
+  const [recordedAudioBlob, setRecorderAudioBlob] = useState(null);
 
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
@@ -64,7 +65,6 @@ const CaptureAudio = ({ setShowCaptureAudio }) => {
     if (recordedAudio) {
       const updatePlaybackTime = () => {
         setCurrentPlaybackTime(recordedAudio.currentTime);
-        console.log("adas");
       };
       recordedAudio.addEventListener("timeupdate", updatePlaybackTime);
 
@@ -96,13 +96,14 @@ const CaptureAudio = ({ setShowCaptureAudio }) => {
 
         mediaRecorder.onstop = () => {
           const audioBlob = new Blob(audioChunks, {
-            type: "audio/ogg : codec",
+            type: "audio/mp3",
           });
           const audioUrl = URL.createObjectURL(audioBlob);
 
           const audio = new Audio(audioUrl);
 
           setRecordedAudio(audio);
+          setRecorderAudioBlob(audioBlob);
 
           waweForm.load(audioUrl);
         };
@@ -160,6 +161,12 @@ const CaptureAudio = ({ setShowCaptureAudio }) => {
     }
     setRecordedAudio(null);
     setShowCaptureAudio(false);
+  };
+
+  const handleSendVocie = () => {
+    console.log("handleSendVocie");
+
+    sendVoiceMessage(recordedAudioBlob);
   };
 
   return (
@@ -220,7 +227,7 @@ const CaptureAudio = ({ setShowCaptureAudio }) => {
                     {recordedAudio && (
                       <div
                         className="p-2 rounded-full bg-primary cursor-pointer"
-                        onClick={handleStopRecording}
+                        onClick={handleSendVocie}
                       >
                         <LuSendHorizonal className="text-xl" />
                       </div>

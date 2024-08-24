@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 
 const ProfileContent = () => {
   const user = useRecoilValue(userAtom);
-  console.log(user);
 
   return (
     <div className="my-3 md:h-[80vh] h-[65vh]">

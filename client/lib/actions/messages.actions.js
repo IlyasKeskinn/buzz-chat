@@ -89,7 +89,7 @@ export async function sendImageMessage(data) {
       };
     });
 
-    const randomNumber = Math.floor(Math.random()) * 10000;
+    const randomNumber = Math.floor(Math.random() * 100000);
     if (image) {
       const storageRef = ref(
         firebaseStorage,
@@ -113,6 +113,49 @@ export async function sendImageMessage(data) {
     return JSON.parse(JSON.stringify(newMessage));
   } catch (error) {
     throw new Error(error);
+  }
+}
+
+export async function sendAudioMessage(data) {
+  const { senderId, chatRoomId, audioURL } = data;
+
+
+  try {
+    await connectToDatabase();
+
+    if (!senderId || !chatRoomId) {
+      throw new Error("Sender or chatroom is required");
+    }
+
+    if (!audioURL) {
+      throw new Error("Voice not found!");
+    }
+
+    const chatRoom = await ChatRoom.findById(chatRoomId);
+
+    const receiverUsers = chatRoom.participants.filter(
+      (member) => member._id.toString() !== senderId
+    );
+
+    const recipientStatuses = receiverUsers.map((recieverUser) => {
+      const isOnline = global.onlineUsers.has(recieverUser._id.toString());
+      return {
+        userId: recieverUser._id,
+        status: isOnline ? "delivered" : "sent",
+      };
+    });
+
+    const newMessage = await Message.create({
+      sender: senderId,
+      chatRoom: chatRoomId,
+      recipientStatuses,
+      messageType: "voice",
+      message: audioURL,
+    });
+
+    return JSON.parse(JSON.stringify(newMessage));
+  } catch (error) {
+    console.log(error);
   }
 }
 

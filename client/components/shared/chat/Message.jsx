@@ -88,6 +88,8 @@ const Message = ({ message }) => {
           </div>
         </div>
       )}
+
+      {message.messageType === "voice" && <div>{message.message}</div>}
     </>
   );
 };
