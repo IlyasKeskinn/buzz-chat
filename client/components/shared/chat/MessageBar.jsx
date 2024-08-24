@@ -1,4 +1,5 @@
 import { HiOutlineMicrophone } from "react-icons/hi2";
+import { MdOutlineEmojiEmotions } from "react-icons/md";
 import { LuSendHorizonal } from "react-icons/lu";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
@@ -13,8 +14,8 @@ import userAtom from "@/atom/userAtom";
 import currentChatAtom from "@/atom/currentChatAtom";
 import messageAtom from "@/atom/messageaAtom";
 import SendPhotoDialog from "./SendPhotoDialog";
+import CaptureAudio from "../common/CaptureAudio";
 import { SendPhotoDropdown } from "../common/SendPhotoDropdown";
-import { MdOutlineEmojiEmotions } from "react-icons/md";
 
 const MessageBar = ({ socket }) => {
   const { theme } = useTheme();
@@ -24,6 +25,7 @@ const MessageBar = ({ socket }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgURL, setImgURL] = useState("");
+  const [showCapturAudio, setShowCaptureAudio] = useState(false);
   const emojiPickerRef = useRef(null);
 
   const user = useRecoilValue(userAtom);
@@ -33,6 +35,14 @@ const MessageBar = ({ socket }) => {
   const recieverUser = currentChat.participants.find(
     (member) => member._id !== user.userInfo._id
   );
+
+  useEffect(() => {
+    setShowCaptureAudio(false);
+    setShowEmojiPicker(false);
+    setImgURL("");
+    setLoading(false);
+    setText("");
+  }, [currentChat]);
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -116,73 +126,84 @@ const MessageBar = ({ socket }) => {
   };
 
   return (
-    <div className="w-full h-[8vh] flex items-center gap-4 relative px-5 ">
-      <>
-        <div className="flex gap-6 text-">
-          <MdOutlineEmojiEmotions
-            className="text-xl cursor-pointer"
+    <div className="w-full h-[8vh] flex items-center gap-1 relative px-4 ">
+      {!showCapturAudio && (
+        <>
+          <div
+            className="rounded-full h-12 w-12 flex justify-center items-center cursor-pointer hover:bg-gray-200/30 transition-colors duration-200"
             onClick={() => {
               setShowEmojiPicker(!showEmojiPicker);
             }}
-          />
-        </div>
-        <div className="w-full rounded-lg h-10 flex items-center">
-          <div className="px-4 w-full">
-            <div
-              className={`flex gap-4 items-center border border-bee/10 rounded-xl ${
-                theme === "light" ? "bg-muted/80" : "bg-muted/10"
-              }`}
-            >
-              <div className="w-full">
-                <input
-                  onChange={(e) => handleChange(e)}
-                  onKeyDown={handleKeyPress}
-                  value={text}
-                  placeholder="Type..."
-                  className="search-field"
-                ></input>
-              </div>
-              {text ? (
-                <div
-                  onClick={sendMessage}
-                  className={`p-2 me-8 ${
-                    text && "rounded-full bg-primary"
-                  } cursor-pointer`}
-                >
-                  <LuSendHorizonal
-                    className={`text-xl ${
-                      text ? "text-black" : "text-foreground"
-                    }`}
-                  />
+          >
+            <MdOutlineEmojiEmotions className="text-xl" />
+          </div>
+          <div className="w-full rounded-lg h-14 flex items-center">
+            <div className="px-2 w-full h-14">
+              <div
+                className={`flex gap-4 h-14 items-center border border-bee/10 rounded-xl ${
+                  theme === "light" ? "bg-muted/80" : "bg-muted/10"
+                }`}
+              >
+                <div className="w-full ">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    onKeyDown={handleKeyPress}
+                    value={text}
+                    placeholder="Type..."
+                    className="search-field"
+                  ></input>
                 </div>
-              ) : (
-                <div className="flex justify-center items-center p-2 me-8 gap-5">
-                  <SendPhotoDropdown imgURL={imgURL} setImgURL={setImgURL} />
-                  <div>
-                    <HiOutlineMicrophone className={`text-xl`} />
+                {text ? (
+                  <div
+                    onClick={sendMessage}
+                    className={`p-2 me-4 ${
+                      text && "rounded-full bg-primary"
+                    } cursor-pointer`}
+                  >
+                    <LuSendHorizonal
+                      className={`text-xl ${
+                        text ? "text-black" : "text-foreground"
+                      }`}
+                    />
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="flex justify-center items-center p-2 me-8 gap-5">
+                    <SendPhotoDropdown imgURL={imgURL} setImgURL={setImgURL} />
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setShowCaptureAudio(true);
+                      }}
+                    >
+                      <HiOutlineMicrophone className={`text-xl`} />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        {showEmojiPicker && (
-          <div ref={emojiPickerRef} className="absolute bottom-16 left-4">
-            <EmojiPicker
-              theme={theme === "dark" ? "dark" : "light"}
-              onEmojiClick={onEmojiClick}
-            />
-          </div>
-        )}
-        {imgURL && (
-          <SendPhotoDialog
-            imgURL={imgURL}
-            setImgURL={setImgURL}
-            sendImage={sendImage}
-            loading={loading}
+        </>
+      )}
+      {showEmojiPicker && (
+        <div ref={emojiPickerRef} className="absolute bottom-16 left-4">
+          <EmojiPicker
+            theme={theme === "dark" ? "dark" : "light"}
+            onEmojiClick={onEmojiClick}
           />
-        )}
-      </>
+        </div>
+      )}
+
+      {imgURL && (
+        <SendPhotoDialog
+          imgURL={imgURL}
+          setImgURL={setImgURL}
+          sendImage={sendImage}
+          loading={loading}
+        />
+      )}
+      {showCapturAudio && (
+        <CaptureAudio setShowCaptureAudio={setShowCaptureAudio} />
+      )}
     </div>
   );
 };
