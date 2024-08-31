@@ -1,17 +1,10 @@
-import { IoSearchSharp } from "react-icons/io5";
-import { BsThreeDots } from "react-icons/bs";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import Avatar from "../common/Avatar";
-import SearchBar from "../common/SearchBar";
 import receiverAtom from "@/atom/receiverAtom";
 import { IoMdArrowBack } from "react-icons/io";
+import { IoSearchSharp } from "react-icons/io5";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import currentChatAtom from "@/atom/currentChatAtom";
+import SearchMessage from "./SearchMessage";
 
 const ChatHeader = () => {
   const receiverUser = useRecoilValue(receiverAtom);
@@ -47,29 +40,13 @@ const ChatHeader = () => {
             </div>
           </div>
           <div className="flex justify-between items-center gap-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="cursor-pointer">
+            <SearchMessage
+              child={
+                <div className="p-2 m-2 cursor-pointer w-8">
                   <IoSearchSharp />
                 </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="rounded-xl p-0 m-0">
-                <SearchBar />
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="cursor-pointer">
-                  <BsThreeDots />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="rounded-xl p-0 m-0">
-                <DropdownMenuItem className="rounded-xl w-full h-full cursor-pointer p-4">
-                  Block User
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              }
+            />
           </div>
         </div>
       </div>

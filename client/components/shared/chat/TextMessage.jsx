@@ -1,10 +1,10 @@
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
 
-
 const TextMessage = ({ user, message }) => {
   return (
     <div
+      id={message._id}
       className={`flex ${
         message.sender !== user.userInfo._id ? "justify-start" : "justify-end"
       } mb-2`}

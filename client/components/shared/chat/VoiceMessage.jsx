@@ -138,6 +138,7 @@ const VoiceMessage = ({ user, message }) => {
 
   return (
     <div
+      id={message._id}
       className={`flex ${
         message.sender !== user.userInfo._id ? "justify-start" : "justify-end"
       } mb-2`}
