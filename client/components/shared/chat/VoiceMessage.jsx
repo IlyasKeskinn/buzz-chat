@@ -1,8 +1,13 @@
-import { calculateTime } from "@/utils/CalculateTime";
-import { useEffect, useRef, useState } from "react";
 import MessageStatus from "../common/MessageStatus";
 import WaveSurfer from "wavesurfer.js";
-import { FaPlay, FaStop } from "react-icons/fa";
+import { calculateTime } from "@/utils/CalculateTime";
+import { useEffect, useRef, useState } from "react";
+import { FaPlay, FaPause } from "react-icons/fa";
+import currentChatAtom from "@/atom/currentChatAtom";
+import { useRecoilValue } from "recoil";
+
+// Store the current playing WaveSurfer instance in a ref or context
+let currentPlayingWaveform = null;
 
 const VoiceMessage = ({ user, message }) => {
   const [audioMessage, setAudioMessage] = useState(null);
@@ -10,6 +15,15 @@ const VoiceMessage = ({ user, message }) => {
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(0);
   const [playingAudio, setPlayingAudio] = useState(false);
   const [waveform, setWaveform] = useState(null);
+  const [audioRate, setAudioRate] = useState(1);
+  const currentChat = useRecoilValue(currentChatAtom);
+
+  useEffect(() => {
+    if (waveform) {
+      currentPlayingWaveform = null;
+      waveform.stop();
+    }
+  }, [currentChat]);
 
   const waveFormRef = useRef(null);
 
@@ -20,6 +34,13 @@ const VoiceMessage = ({ user, message }) => {
       progressColor: "#040404",
       barWidth: 2,
       height: 30,
+      barGap: 2,
+      minPxPerSec: 1,
+      fillParent: true,
+      dragToSeek: true,
+      autoScroll: true,
+      autoCenter: true,
+      sampleRate: 8000,
     });
 
     setWaveform(waveSurfer);
@@ -28,35 +49,62 @@ const VoiceMessage = ({ user, message }) => {
       setPlayingAudio(false);
     });
 
-    return () => waveSurfer.destroy();
+    return () => {
+      waveSurfer.destroy();
+    };
   }, []);
 
   useEffect(() => {
     if (waveform) {
       const audio = new Audio(message.message);
-
       setAudioMessage(audio);
-
       waveform.load(message.message);
 
       waveform.on("ready", () => {
-
         setTotalDuration(waveform.getDuration());
       });
+
+      return () => {
+        if (waveform) {
+          waveform.un("ready");
+        }
+      };
     }
   }, [waveform, message.message]);
 
   const handlePlayingAudio = () => {
-    if (audioMessage) {
+    if (audioMessage && waveform) {
       waveform.play();
       setPlayingAudio(true);
+      currentPlayingWaveform = waveform; // Set the current playing waveform
     }
   };
 
-  const handleStopAudio = () => {
-    if (audioMessage) {
+  useEffect(() => {
+    if (currentPlayingWaveform && currentPlayingWaveform !== waveform) {
       waveform.stop();
       setPlayingAudio(false);
+    }
+  }, [currentPlayingWaveform]);
+
+  const handleStopAudio = () => {
+    if (audioMessage && waveform) {
+      waveform.stop();
+      setPlayingAudio(false);
+      currentPlayingWaveform = null; // Clear the current playing waveform
+    }
+  };
+
+  const handleChangeAudioRate = () => {
+    if (audioRate === 1) {
+      waveform.setPlaybackRate(1.5);
+      setAudioRate(1.5);
+    } else if (audioRate === 1.5) {
+      waveform.setPlaybackRate(2);
+      setAudioRate(2);
+    } else {
+      waveform.setPlaybackRate(1);
+      setAudioRate(1);
     }
   };
 
@@ -64,13 +112,13 @@ const VoiceMessage = ({ user, message }) => {
     if (isNaN(time)) return "00:00";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes.toString().padStart("2", "0")} : ${seconds
+    return `${minutes.toString().padStart(2, "0")} : ${seconds
       .toString()
-      .padStart("2", "0")}`;
+      .padStart(2, "0")}`;
   };
 
   useEffect(() => {
-    if (setAudioMessage && waveform) {
+    if (waveform) {
       const updatePlaybackTime = () => {
         setCurrentPlaybackTime(waveform.getCurrentTime());
       };
@@ -86,7 +134,7 @@ const VoiceMessage = ({ user, message }) => {
         waveform.un("finish");
       };
     }
-  }, [setAudioMessage, waveform]);
+  }, [waveform]);
 
   return (
     <div
@@ -114,16 +162,23 @@ const VoiceMessage = ({ user, message }) => {
                   </div>
                 ) : (
                   <div className="cursor-pointer w-8" onClick={handleStopAudio}>
-                    <FaStop className="text-xl" />
+                    <FaPause className="text-xl" />
                   </div>
                 ))}
-              <div
-                className="w-40"
-                ref={waveFormRef}
-                id="waveformContainer"
-              ></div>
-              <div className="w-20">
-                <span>
+              <div className="flex flex-col w-52">
+                <div className="flex w-52 gap-2">
+                  <div
+                    className="w-40"
+                    ref={waveFormRef}
+                    id="waveformContainer"
+                  ></div>
+                  <div className="flex  justify-center items-center w-10">
+                    <button className="px-2" onClick={handleChangeAudioRate}>
+                      {audioRate}x
+                    </button>
+                  </div>
+                </div>
+                <span className="text-xs">
                   {!playingAudio
                     ? formatTime(totalDuration)
                     : formatTime(currentPlaybackTime)}

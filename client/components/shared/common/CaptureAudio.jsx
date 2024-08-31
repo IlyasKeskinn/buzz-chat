@@ -1,8 +1,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { FaPlay } from "react-icons/fa";
-import { FaStop } from "react-icons/fa";
+import { FaPlay,FaPause } from "react-icons/fa";
 import { LuSendHorizonal } from "react-icons/lu";
 import { IoIosPause } from "react-icons/io";
 import { HiOutlineMicrophone } from "react-icons/hi2";
@@ -209,7 +208,7 @@ const CaptureAudio = ({
                           className="cursor-pointer"
                           onClick={handleStopAudio}
                         >
-                          <FaStop className="text-xl" />
+                          <FaPause className="text-xl" />
                         </div>
                       ))}
                     <div
