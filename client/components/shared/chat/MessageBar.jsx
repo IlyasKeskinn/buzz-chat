@@ -36,7 +36,7 @@ const MessageBar = ({ socket }) => {
   const setMessages = useSetRecoilState(messageAtom);
   const currentChat = useRecoilValue(currentChatAtom);
 
-  const recieverUser = currentChat.participants.find(
+  const recieverUser = currentChat.chatRoom.participants.find(
     (member) => member._id !== user.userInfo._id
   );
 
@@ -57,11 +57,11 @@ const MessageBar = ({ socket }) => {
     try {
       const newMessage = await createMessage({
         senderId: user.userInfo._id,
-        chatRoomId: currentChat._id,
+        chatRoomId: currentChat.chatRoom._id,
         text: text,
       });
       socket.emit("send-msg", {
-        chatRoomId: currentChat._id,
+        chatRoomId: currentChat.chatRoom._id,
         message: newMessage,
         recieverUser: recieverUser._id,
       });
@@ -109,11 +109,11 @@ const MessageBar = ({ socket }) => {
       setLoading(true);
       const newMessage = await sendImageMessage({
         senderId: user.userInfo._id,
-        chatRoomId: currentChat._id,
+        chatRoomId: currentChat.chatRoom._id,
         image: imgURL,
       });
       socket.emit("send-msg", {
-        chatRoomId: currentChat._id,
+        chatRoomId: currentChat.chatRoom._id,
         recieverUser: recieverUser._id,
         message: newMessage,
       });
@@ -150,12 +150,12 @@ const MessageBar = ({ socket }) => {
 
       const newMessage = await sendAudioMessage({
         senderId: user.userInfo._id,
-        chatRoomId: currentChat._id,
+        chatRoomId: currentChat.chatRoom._id,
         audioURL: audioURL,
       });
 
       socket.emit("send-msg", {
-        chatRoomId: currentChat._id,
+        chatRoomId: currentChat.chatRoom._id,
         recieverUser: recieverUser._id,
         message: newMessage,
       });

@@ -17,7 +17,10 @@ const ChatContainer = () => {
   useEffect(() => {
     const fetchMessage = async () => {
       try {
-        const messageData = await getMessages(chatRoom._id, user.userInfo._id);
+        const messageData = await getMessages(
+          chatRoom.chatRoom._id,
+          user.userInfo._id
+        );
         setMessages(messageData);
         scrollToBottom();
       } catch (error) {}

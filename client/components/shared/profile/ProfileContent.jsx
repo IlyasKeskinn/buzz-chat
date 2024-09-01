@@ -11,9 +11,27 @@ import {
 import BlockedUserTile from "../common/BlockedUserTile";
 import { Button } from "@/components/ui/button";
 import EditForm from "../common/Forms/EditForm";
+import { useEffect, useState } from "react";
+import { getBlockedUsers } from "@/lib/actions/user.actions";
+import menuAtom from "@/atom/menuAtom";
+import { MenuConst } from "@/constants";
 
 const ProfileContent = () => {
   const user = useRecoilValue(userAtom);
+  const activeMenu = useRecoilValue(menuAtom);
+  const [blockedUsers, setBlockedUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchBlockedUsers = async () => {
+      try {
+        const blockedUsersList = await getBlockedUsers(user.userInfo._id);
+        return setBlockedUsers(blockedUsersList);
+      } catch (error) {}
+    };
+    if (activeMenu === MenuConst.PROFILE) {
+      fetchBlockedUsers();
+    }
+  }, [activeMenu]);
 
   return (
     <div className="my-3 md:h-[80vh] h-[65vh]">
@@ -42,14 +60,15 @@ const ProfileContent = () => {
               </AccordionTrigger>
               <AccordionContent>
                 <div className="overflow-auto md:h-[40vh] h-[25vh]">
-                  <BlockedUserTile user={user.userInfo} />
-                  <BlockedUserTile user={user.userInfo} />
-                  <BlockedUserTile user={user.userInfo} />
-                  <BlockedUserTile user={user.userInfo} />
-                  <BlockedUserTile user={user.userInfo} />
-                  <BlockedUserTile user={user.userInfo} />
-                  <BlockedUserTile user={user.userInfo} />
-                  <BlockedUserTile user={user.userInfo} />
+                  {blockedUsers.length > 0 ? (
+                    blockedUsers.map((blockUser, index) => (
+                      <BlockedUserTile key={index} user={blockUser} />
+                    ))
+                  ) : (
+                    <div>
+                      <p>No blocked users 😉</p>
+                    </div>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>

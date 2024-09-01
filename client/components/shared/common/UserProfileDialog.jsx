@@ -4,20 +4,26 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import React from "react";
 import Avatar from "./Avatar";
 import { Button } from "@/components/ui/button";
 import { useRecoilValue } from "recoil";
 import userAtom from "@/atom/userAtom";
+import useBlockUnblock from "@/hooks/useBlockUnblock";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 const UserProfileDialog = ({ user, trigger }) => {
   const currentUser = useRecoilValue(userAtom);
   const isOwnerProfile = currentUser.userInfo._id === user._id;
+
+  const { isBlockUser, handleBlockUser } = useBlockUnblock(user);
+
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
-        <DialogHeader />
+        <DialogHeader>
+          <DialogTitle></DialogTitle>
+        </DialogHeader>
         <div className="my-3">
           <div className="flex flex-col items-center justify-center gap-6">
             <div className="flex flex-col justify-center items-center gap-4">
@@ -36,10 +42,10 @@ const UserProfileDialog = ({ user, trigger }) => {
                 <Button
                   variant="outline"
                   className={`w-28 py-6 border-red-400 hover:bg-red-400 transition-all duration-300 rounded-xl`}
+                  onClick={handleBlockUser}
                 >
-                  Block
+                  {isBlockUser ? "Unblock" : "Block"}
                 </Button>
-                <Button className="w-28 py-6 rounded-xl">Add Contacts</Button>
               </div>
             )}
           </div>

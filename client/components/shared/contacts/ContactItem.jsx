@@ -14,8 +14,10 @@ const ContactItem = ({ user }) => {
   const { toast } = useToast();
   const handleChatRoom = async () => {
     try {
-      const room = await check_create_room(user?._id);
-      setChatRoom(room);
+      const data = await check_create_room(user?._id);
+      console.log(data);
+      
+      setChatRoom(data);
       setReceiverUser(user);
     } catch (error) {
       if (error instanceof Error) {
@@ -52,12 +54,6 @@ const ContactItem = ({ user }) => {
                   {user.username.charAt(0).toUpperCase() +
                     user.username.slice(1).toLowerCase()}
                 </p>
-              </div>
-
-              <div>
-                <Button className="rounded-xl">
-                  <TiUserAddOutline />
-                </Button>
               </div>
             </div>
           </div>

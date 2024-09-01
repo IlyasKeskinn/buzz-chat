@@ -5,6 +5,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import currentChatAtom from "@/atom/currentChatAtom";
 import SearchMessage from "./SearchMessage";
+import UserProfileDialog from "../common/UserProfileDialog";
 
 const ChatHeader = () => {
   const receiverUser = useRecoilValue(receiverAtom);
@@ -23,7 +24,16 @@ const ChatHeader = () => {
                   setCurrentChat(undefined);
                 }}
               />
-              <Avatar size="sm" imgURL={receiverUser.avatarURL} />
+              <div>
+                <UserProfileDialog
+                  user={receiverUser}
+                  trigger={
+                    <div className="flex justify-center items-center">
+                      <Avatar size="sm" imgURL={receiverUser.avatarURL} />
+                    </div>
+                  }
+                />
+              </div>
             </div>
             <div className="flex flex-col">
               <p className="text-lg">

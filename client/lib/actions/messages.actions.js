@@ -5,6 +5,7 @@ import Message from "../database/models/message.model";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { firebaseStorage } from "@/utils/FirebaseConfig";
 import { dataURLtoBlob } from "../helpers/dataURLtoBlob";
+import User from "../database/models/user.model";
 export async function createMessage(data) {
   const { senderId, text, chatRoomId } = data;
 
@@ -22,10 +23,22 @@ export async function createMessage(data) {
       throw new Error("Message is required!");
     }
 
-    const chatRoom = await ChatRoom.findById(chatRoomId);
+    const chatRoom = await ChatRoom.findById(chatRoomId).populate(
+      "participants"
+    );
 
     if (!chatRoom) {
       throw new Error("Chat room not found!");
+    }
+
+    // Check if the sender is blocked by any participant or if the sender has blocked any participant
+    for (let participant of chatRoom.participants) {
+      if (
+        participant._id.toString() !== senderId &&
+        participant.blockedUsers.includes(senderId)
+      ) {
+        throw new Error("Message cannot be sent due to blocking rules.");
+      }
     }
 
     const receiverUsers = chatRoom.participants.filter(
@@ -71,12 +84,23 @@ export async function sendImageMessage(data) {
       throw new Error("ChatRoomId is required");
     }
 
-    const chatRoom = await ChatRoom.findById(chatRoomId);
+    const chatRoom = await ChatRoom.findById(chatRoomId).populate(
+      "participants"
+    );
 
     if (!chatRoom) {
       throw new Error("Chat is required");
     }
 
+    // Check if the sender is blocked by any participant or if the sender has blocked any participant
+    for (let participant of chatRoom.participants) {
+      if (
+        participant._id.toString() !== senderId &&
+        participant.blockedUsers.includes(senderId)
+      ) {
+        throw new Error("Message cannot be sent due to blocking rules.");
+      }
+    }
     const receiverUsers = chatRoom.participants.filter(
       (member) => member._id.toString() !== senderId
     );
@@ -119,7 +143,6 @@ export async function sendImageMessage(data) {
 export async function sendAudioMessage(data) {
   const { senderId, chatRoomId, audioURL } = data;
 
-
   try {
     await connectToDatabase();
 
@@ -131,7 +154,19 @@ export async function sendAudioMessage(data) {
       throw new Error("Voice not found!");
     }
 
-    const chatRoom = await ChatRoom.findById(chatRoomId);
+    const chatRoom = await ChatRoom.findById(chatRoomId).populate(
+      "participants"
+    );
+
+    // Check if the sender is blocked by any participant or if the sender has blocked any participant
+    for (let participant of chatRoom.participants) {
+      if (
+        participant._id.toString() !== senderId &&
+        participant.blockedUsers.includes(senderId)
+      ) {
+        throw new Error("Message cannot be sent due to blocking rules.");
+      }
+    }
 
     const receiverUsers = chatRoom.participants.filter(
       (member) => member._id.toString() !== senderId

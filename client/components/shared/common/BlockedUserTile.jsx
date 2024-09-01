@@ -1,10 +1,13 @@
 import React from "react";
 import Avatar from "./Avatar";
 import { Button } from "@/components/ui/button";
+import useBlockUnblock from "@/hooks/useBlockUnblock";
 
 const BlockedUserTile = ({ user }) => {
+  const { isBlockUser, handleBlockUser } = useBlockUnblock(user);
+
   return (
-    <div className="w-full py-3 rounded hover:bg-bee/10 ctransition-colors duration-100">
+    <div className="w-full py-3">
       <div>
         <div className="w-full py-2">
           <div className="flex w-full gap-4 justify-between">
@@ -18,7 +21,13 @@ const BlockedUserTile = ({ user }) => {
                     user.username.slice(1).toLowerCase()}
                 </p>
                 <div>
-                  <Button variant="destructive" className="rounded-xl w-20">Block</Button>
+                  <Button
+                    variant="destructive"
+                    className="rounded-xl w-20"
+                    onClick={handleBlockUser}
+                  >
+                    {isBlockUser ? "Unblock" : "Block"}
+                  </Button>
                 </div>
               </div>
             </div>

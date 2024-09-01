@@ -132,12 +132,80 @@ export async function editUser(data) {
   }
 }
 
-export async function getAllUsers() {
-  await connectToDatabase();
+export async function blockUnblockUser(data) {
+  const { currentUserId, blockUserId } = data;
+
+  if (!currentUserId && !blockUserId) {
+    throw new Error("User Id and block user id required!");
+  }
+
+  if (currentUserId === blockUserId) {
+    throw new Error("You cannot add blocked yourself.");
+  }
+
   try {
+    await connectToDatabase();
+
+    const currentUser = await User.findById(currentUserId);
+
+    if (!currentUser) {
+      throw new Error("User not found!");
+    }
+
+    const blockUser = await User.findById(blockUserId);
+    if (!blockUser) {
+      throw new Error("Block user not found!");
+    }
+
+    const isBlocking = currentUser.blockedUsers.includes(blockUserId);
+
+    if (isBlocking) {
+      await User.findByIdAndUpdate(currentUserId, {
+        $pull: { blockedUsers: blockUserId },
+      });
+      return JSON.parse(
+        JSON.stringify(
+          `${blockUser.username.toLowerCase()} removed to your block list.`
+        )
+      );
+    } else {
+      await User.findByIdAndUpdate(currentUserId, {
+        $push: { blockedUsers: blockUserId },
+      });
+      return JSON.parse(
+        JSON.stringify(
+          `${blockUser.username.toLowerCase()} added to your block list.`
+        )
+      );
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getAllUsers() {
+  try {
+    await connectToDatabase();
     const users = await User.find();
     return JSON.parse(JSON.stringify(users));
   } catch (error) {
     throw new Error(error);
+  }
+}
+
+export async function getBlockedUsers(userId) {
+  try {
+    await connectToDatabase();
+    const user = await User.findById(userId).populate("blockedUsers");
+
+    if (!user) {
+      throw new Error("User not found!");
+    }
+
+    const blockedUsers = user.blockedUsers;
+
+    return JSON.parse(JSON.stringify(blockedUsers));
+  } catch (error) {
+    throw error;
   }
 }
