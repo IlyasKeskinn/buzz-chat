@@ -11,6 +11,6 @@ export const signUpSchema = z.object({
     .regex(/^\S+$/, { message: "Username cannot contain spaces." }), // No spaces allowed
   bio: z
     .string()
-    .max(500, { message: "Bio must be most 500 characters." })
+    .max(100, { message: "Bio must be most 100 characters." })
     .optional(),
 });

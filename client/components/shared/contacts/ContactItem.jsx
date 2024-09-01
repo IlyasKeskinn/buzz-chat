@@ -6,12 +6,6 @@ import { useRecoilState } from "recoil";
 import { useToast } from "@/components/ui/use-toast";
 import currentChatAtom from "@/atom/currentChatAtom";
 import receiverAtom from "@/atom/receiverAtom";
-import {
-  Dialog,
-  DialogHeader,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import UserProfileDialog from "../common/UserProfileDialog";
 const ContactItem = ({ user }) => {
   const [chatRoom, setChatRoom] = useRecoilState(currentChatAtom);

@@ -73,7 +73,10 @@ const CapturePhoto = ({ open, setOpen, setImgURL }) => {
   const videoRef = useRef(null);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent
+        className="sm:max-w-md"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle className="text-center">Take photo</DialogTitle>
 

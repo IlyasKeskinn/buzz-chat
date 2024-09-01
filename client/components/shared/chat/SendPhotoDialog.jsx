@@ -14,7 +14,11 @@ const SendPhotoDialog = ({ sendImage, imgURL, setImgURL, loading }) => {
   };
   return (
     <Dialog open={imgURL}>
-      <DialogContent className="sm:max-w-md" closeButton={false}>
+      <DialogContent
+        className="sm:max-w-md"
+        closeButton={false}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader />
         <div className="flex justify-center items-center h-full w-full rounded-xl">
           <Image

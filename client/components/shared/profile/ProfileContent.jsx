@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import BlockedUserTile from "../common/BlockedUserTile";
 import { Button } from "@/components/ui/button";
+import EditForm from "../common/Forms/EditForm";
 
 const ProfileContent = () => {
   const user = useRecoilValue(userAtom);
@@ -25,11 +26,13 @@ const ProfileContent = () => {
             <p className="text-lg">@{user.userInfo.username}</p>
           </div>
         </div>
-        <div>
+        <div className="px-4">
           <p>{user.userInfo.bio}</p>
         </div>
         <div>
-          <Button className="rounded-xl">Edit Profile</Button>
+          <EditForm
+            trigger={<Button className="rounded-xl">Edit Profile</Button>}
+          />
         </div>
         <div className="w-full px-3">
           <Accordion type="single" collapsible>

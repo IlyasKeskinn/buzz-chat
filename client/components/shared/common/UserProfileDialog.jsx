@@ -16,7 +16,7 @@ const UserProfileDialog = ({ user, trigger }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader />
         <div className="my-3">
           <div className="flex flex-col items-center justify-center gap-6">

@@ -20,9 +20,7 @@ const ChatContainer = () => {
         const messageData = await getMessages(chatRoom._id, user.userInfo._id);
         setMessages(messageData);
         scrollToBottom();
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     fetchMessage();
   }, [setMessages, chatRoom]);
