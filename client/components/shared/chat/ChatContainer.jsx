@@ -1,15 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import Message from "./Message";
 import Empty from "../Empty";
-import { getMessages } from "@/lib/actions/messages.actions";
+import {
+  getInitialMessages,
+  getMessages,
+} from "@/lib/actions/messages.actions";
 import { useRecoilState, useRecoilValue } from "recoil";
 import currentChatAtom from "@/atom/currentChatAtom";
 import messageAtom from "@/atom/messageaAtom";
 import userAtom from "@/atom/userAtom";
 import EmptyChat from "./EmptyChat";
+import chatListAtom from "@/atom/chatListAtom";
 
-const ChatContainer = () => {
+const ChatContainer = ({ socket }) => {
   const [messages, setMessages] = useRecoilState(messageAtom);
+  const [chatList, setChatList] = useRecoilState(chatListAtom);
   const chatRoom = useRecoilValue(currentChatAtom);
   const user = useRecoilValue(userAtom);
   const messagesEndRef = useRef(null);
@@ -31,6 +36,23 @@ const ChatContainer = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  useEffect(() => {
+    const markMessagesAsRead = async () => {
+      if (chatRoom && user) {
+        // await updateMessageStatusToRead(chatRoom._id, user.userInfo._id);
+        socket.emit("mark-messages-read", {
+          chatRoomId: chatRoom._id,
+          userId: user.userInfo._id,
+        });
+        const updatedSummaries = await getInitialMessages(user.userInfo._id);
+        setChatList(updatedSummaries);
+      }
+    };
+
+    if (chatRoom) {
+      markMessagesAsRead();
+    }
+  }, [chatRoom, user]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -44,7 +66,7 @@ const ChatContainer = () => {
           <Message key={message._id} message={message} />
         ))
       )}
-      <div ref={messagesEndRef} />
+      <div ref={messagesEndRef} className="h-2" />
     </div>
   );
 };

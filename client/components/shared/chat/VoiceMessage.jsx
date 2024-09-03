@@ -21,7 +21,7 @@ const VoiceMessage = ({ user, message }) => {
   useEffect(() => {
     if (waveform) {
       currentPlayingWaveform = null;
-      waveform.stop();
+      waveform.destroy();
     }
   }, [currentChat]);
 
@@ -50,7 +50,9 @@ const VoiceMessage = ({ user, message }) => {
     });
 
     return () => {
-      waveSurfer.destroy();
+      if (waveSurfer) {
+        waveSurfer.destroy();
+      }
     };
   }, []);
 

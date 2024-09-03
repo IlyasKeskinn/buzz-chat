@@ -11,16 +11,23 @@ import Aside from "@/components/shared/common/Aside";
 import Menu from "@/components/shared/common/Menu";
 import PageLoading from "@/components/shared/common/PageLoading";
 import Empty from "@/components/shared/Empty";
-import { updateMessageStatusToDelivered } from "@/lib/actions/messages.actions";
+import {
+  getInitialMessages,
+  updateMessageStatusToDelivered,
+} from "@/lib/actions/messages.actions";
+import chatListAtom from "@/atom/chatListAtom";
 
 export default function Home() {
   const user = useRecoilValue(userAtom);
   const chatRoom = useRecoilValue(currentChatAtom);
   const setSocket = useSetRecoilState(socketAtom);
   const [messages, setMessages] = useRecoilState(messageAtom);
+  const [chatList, setChatList] = useRecoilState(chatListAtom);
   const [socketEvent, setSocketEvent] = useState(false);
+  const [loading, setLoading] = useState(true);
   const socket = useRef(null);
   const audioRef = useRef(null);
+
   useEffect(() => {
     const addUserSocket = async () => {
       if (user?.userInfo._id && !socket.current) {
@@ -47,6 +54,27 @@ export default function Home() {
       setSocketEvent(true);
     }
   }, [socket.current, socketEvent]);
+
+  useEffect(() => {
+    const handleInitialMessage = async () => {
+      try {
+        const chatSummaries = await getInitialMessages(user.userInfo._id);
+        setChatList(chatSummaries);
+      } catch (error) {
+        console.error("Failed to fetch chat summaries:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      handleInitialMessage();
+    }
+  }, [user]);
+
+  if (loading) {
+    return <PageLoading />;
+  }
 
   return (
     <>

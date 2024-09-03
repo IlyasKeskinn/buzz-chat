@@ -33,6 +33,17 @@ app.prepare().then(() => {
         socket.to(sendUserSocket).emit("msg-recieve", message);
       }
     });
+
+    socket.on("mark-messages-read", async (data) => {
+      const { chatRoomId, userId } = data;
+      // Update the message statuses to 'read' in your database here
+
+      // Notify the sender that the messages have been read
+      const senderSocket = onlineUsers.get(userId);
+      if (senderSocket) {
+        socket.to(senderSocket).emit("messages-read", { chatRoomId });
+      }
+    });
   });
 
   httpServer

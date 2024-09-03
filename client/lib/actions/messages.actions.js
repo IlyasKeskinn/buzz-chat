@@ -257,3 +257,58 @@ export async function updateMessageStatusToDelivered(userId) {
     console.error("Error updating messages:", error);
   }
 }
+
+export async function getInitialMessages(userId) {
+  if (!userId) {
+    throw new Error("User id is required");
+  }
+
+  try {
+    await connectToDatabase();
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found!");
+    }
+
+    const userChats = await ChatRoom.find({
+      participants: { $in: user._id },
+    }).populate("participants");
+
+    const chatSummaries = [];
+
+    for (const chatRoom of userChats) {
+      const lastMessage = await Message.findOne({
+        chatRoom: chatRoom._id,
+      })
+        .sort({ createdAt: -1 })
+        .exec();
+
+      const unreadMessages = await Message.countDocuments({
+        chatRoom: chatRoom._id,
+        "recipientStatuses.userId": user._id,
+        "recipientStatuses.status": { $in: ["delivered", "sent"] },
+      });
+
+      const receiverUsers = chatRoom.participants
+        .filter((participantUser) => !participantUser._id.equals(user._id))
+        .map((participantUser) => ({
+          _id: participantUser._id,
+          username: participantUser.username,
+          avatarURL: participantUser.avatarURL,
+          email: participantUser.email,
+        }));
+
+      chatSummaries.push({
+        chatRoomId: chatRoom._id,
+        lastMessage: lastMessage || "No messages yet",
+        unreadMessages,
+        receiverUsers,
+      });
+    }
+    return JSON.parse(JSON.stringify(chatSummaries));
+  } catch (error) {
+    throw error;
+  }
+}
