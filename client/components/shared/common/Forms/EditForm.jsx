@@ -8,7 +8,14 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -18,7 +25,6 @@ import { useRecoilState } from "recoil";
 import { useToast } from "@/components/ui/use-toast";
 import { signUpSchema } from "@/lib/validator";
 import { editUser } from "@/lib/actions/user.actions";
-import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
 import userAtom from "@/atom/userAtom";
 import AvatarEdit from "../../photo/AvatarEdit";
 
@@ -90,10 +96,11 @@ const EditForm = ({ trigger }) => {
 
   return (
     <Dialog onOpenChange={handleDialogStateChange}>
-      <DialogTrigger>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
+          <DialogDescription />
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

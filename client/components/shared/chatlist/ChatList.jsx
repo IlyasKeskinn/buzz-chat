@@ -1,18 +1,19 @@
-import React from "react";
-import ChatListHeader from "./ChatListHeader";
-import SearchBar from "../common/SearchBar";
 import ChatListItem from "./ChatListItem";
 import { useRecoilValue } from "recoil";
-import chatListAtom from "@/atom/chatListAtom";
+import filteredChatListAtom from "@/atom/filteredChatList";
 
-const ChatList = () => {
-  const chatList = useRecoilValue(chatListAtom);
-    
+const ChatList = ({chatList}) => {
+  const filteredChatList = useRecoilValue(filteredChatListAtom);
+
   return (
     <div className="overflow-auto md:h-[80vh] h-[65vh]">
-      {chatList.map((chatItem, index) => {
-        return <ChatListItem key={index} chatSummaries={chatItem} />;
-      })}
+      {filteredChatList.length > 0
+        ? filteredChatList.map((chatItem, index) => {
+            return <ChatListItem key={index} chatSummaries={chatItem} />;
+          })
+        : chatList.map((chatItem, index) => {
+            return <ChatListItem key={index} chatSummaries={chatItem} />;
+          })}
     </div>
   );
 };

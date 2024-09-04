@@ -1,25 +1,27 @@
-import filteredContactsAtom from "@/atom/filteredContacts";
+import filteredChatListAtom from "@/atom/filteredChatList";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { useSetRecoilState } from "recoil";
 
-const ContactSearch = ({ contacts }) => {
+const SearchChatList = ({ chatList }) => {
   const { theme } = useTheme();
+  const setFilteredChatList = useSetRecoilState(filteredChatListAtom);
   const [searchTerm, setSearchTerm] = useState("");
-  const setFilteredContacts = useSetRecoilState(filteredContactsAtom);
 
   useEffect(() => {
     let filteredList = [];
     if (searchTerm.length > 0) {
-      filteredList = contacts.filter((user) => {
-        return user.username.toLowerCase().includes(searchTerm.toLowerCase());
+      filteredList = chatList.filter((chat) => {
+        return chat.receiverUsers.some((user) =>
+          user.username.toLowerCase().includes(searchTerm.toLowerCase())
+        );
       });
     } else {
       filteredList = [];
     }
-    setFilteredContacts(filteredList);
-  }, [searchTerm, contacts, setFilteredContacts]);
+    setFilteredChatList(filteredList);
+  }, [chatList, searchTerm, setFilteredChatList]);
 
   return (
     <div className="p-4">
@@ -35,9 +37,7 @@ const ContactSearch = ({ contacts }) => {
           <input
             placeholder="Search..."
             className="search-field"
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-            }}
+            onChange={(e) => setSearchTerm(e.target.value)}
           ></input>
         </div>
       </div>
@@ -45,4 +45,4 @@ const ContactSearch = ({ contacts }) => {
   );
 };
 
-export default ContactSearch;
+export default SearchChatList;

@@ -15,7 +15,6 @@ const ContactItem = ({ user }) => {
   const handleChatRoom = async () => {
     try {
       const data = await check_create_room(user?._id);
-      
       setChatRoom(data);
       setReceiverUser(user);
     } catch (error) {

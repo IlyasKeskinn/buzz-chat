@@ -1,14 +1,18 @@
 import React from "react";
 import ChatListHeader from "./ChatListHeader";
-import SearchBar from "../common/SearchBar";
 import ChatList from "./ChatList";
+import SearchChatList from "./SearchChatList";
+import chatListAtom from "@/atom/chatListAtom";
+import { useRecoilValue } from "recoil";
 
 const Chats = () => {
+  const chatList = useRecoilValue(chatListAtom);
+
   return (
     <>
       <ChatListHeader />
-      <SearchBar />
-      <ChatList />
+      <SearchChatList chatList={chatList} />
+      <ChatList chatList={chatList} />
     </>
   );
 };

@@ -26,7 +26,7 @@ const SearchMessage = ({ child }) => {
   const sheetCloseRef = useRef(null);
 
   useEffect(() => {
-    if (searchTerm && searchTerm.length >= 3) {
+    if (searchTerm && searchTerm.length > 0) {
       setFilteredMessages(
         messages.filter(
           (message) =>
@@ -89,7 +89,7 @@ const SearchMessage = ({ child }) => {
               </p>
             </div>
           )}
-          {searchTerm.length >= 3 &&
+          {searchTerm.length > 0 &&
             filteredMessages.length > 0 &&
             filteredMessages.map((msg, index) => (
               <div
@@ -100,7 +100,7 @@ const SearchMessage = ({ child }) => {
               </div>
             ))}
 
-          {searchTerm.length >= 3 && !filteredMessages.length > 0 && (
+          {searchTerm.length > 0 && !filteredMessages.length > 0 && (
             <div className="h-full flex items-center justify-center">
               <p>Message no found!</p>
             </div>

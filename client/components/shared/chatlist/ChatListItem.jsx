@@ -52,11 +52,13 @@ const ChatListItem = ({ chatSummaries }) => {
                 {chatSummaries.receiverUsers[0].username}
                 {chatSummaries.lastMessage._id && (
                   <span
-                    className={
-                      chatSummaries.unreadMessages > 0
-                        ? "text-bee"
-                        : "text-foreground"
-                    }
+                    className={`text-xs
+                      ${
+                        chatSummaries.unreadMessages > 0
+                          ? "text-bee"
+                          : "text-foreground"
+                      }
+                      `}
                   >
                     {calculateTime(chatSummaries.lastMessage.createdAt)}
                   </span>
@@ -64,20 +66,24 @@ const ChatListItem = ({ chatSummaries }) => {
               </div>
               <div className="flex w-full gap-1 items-center">
                 <div className="md:w-36 w-full">
-                  <p className="line-clamp-1 text-sm text-muted-foreground">
-                    {chatSummaries.lastMessage.messageType === "text" &&
-                      chatSummaries.lastMessage.message}
-                    {chatSummaries.lastMessage.messageType === "voice" && (
-                      <div className="flex items-center gap-2">
-                        <HiOutlineMicrophone /> Voice
-                      </div>
-                    )}
-                    {chatSummaries.lastMessage.messageType === "image" && (
-                      <div className="flex items-center gap-2">
-                        <CiImageOn /> Image
-                      </div>
-                    )}
-                  </p>
+                  {chatSummaries.lastMessage.messageType === "text" ? (
+                    <p className="line-clamp-1 text-sm text-muted-foreground">
+                      {chatSummaries.lastMessage.message}
+                    </p>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      {chatSummaries.lastMessage.messageType === "voice" && (
+                        <>
+                          <HiOutlineMicrophone /> Voice
+                        </>
+                      )}
+                      {chatSummaries.lastMessage.messageType === "image" && (
+                        <>
+                          <CiImageOn /> Image
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
                 {user.userInfo._id === chatSummaries.lastMessage.sender ? (
                   <span className="w-6 h-6 rounded-full flex justify-center items-center">

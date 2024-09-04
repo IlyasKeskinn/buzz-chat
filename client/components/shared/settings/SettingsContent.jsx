@@ -1,7 +1,6 @@
 import userAtom from "@/atom/userAtom";
 import Avatar from "../common/Avatar";
 import { useRecoilValue } from "recoil";
-
 import {
   Accordion,
   AccordionContent,
@@ -10,7 +9,9 @@ import {
 } from "@/components/ui/accordion";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { MdOutlineLogout } from "react-icons/md";
 import ThemeButton from "../theme/ThemeButton";
+import { Button } from "@/components/ui/button";
 
 const SettingsContent = () => {
   const user = useRecoilValue(userAtom);
@@ -58,6 +59,12 @@ const SettingsContent = () => {
               <AccordionContent>Comming Soon!</AccordionContent>
             </AccordionItem>
           </Accordion>
+        </div>
+        <div className="cursor-pointer group">
+          <div className="flex items-center gap-2 p-4 transition-colors duration-200">
+            <p className="group-hover:text-red-600">Logout</p>
+            <MdOutlineLogout className="text-red-600 group-hover:text-red-800 transition-colors duration-200" />
+          </div>
         </div>
       </div>
     </div>

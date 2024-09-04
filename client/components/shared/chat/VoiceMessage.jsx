@@ -83,7 +83,11 @@ const VoiceMessage = ({ user, message }) => {
   };
 
   useEffect(() => {
-    if (currentPlayingWaveform && currentPlayingWaveform !== waveform) {
+    if (
+      currentPlayingWaveform &&
+      currentPlayingWaveform !== waveform &&
+      waveform
+    ) {
       waveform.stop();
       setPlayingAudio(false);
     }
