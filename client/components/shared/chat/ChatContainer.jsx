@@ -35,17 +35,35 @@ const ChatContainer = ({ socket }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+    if (chatRoom) {
+      setChatList((prevChatSummaries = []) => {
+        const chatSummaryIndex = prevChatSummaries.findIndex(
+          (chat) => chat.chatRoomId === chatRoom.chatRoom._id
+        );
+        if (chatSummaryIndex !== -1) {
+          const updatedChatSummaries = [...prevChatSummaries];
+          const chatSummary = updatedChatSummaries[chatSummaryIndex];
+
+          updatedChatSummaries[chatSummaryIndex] = {
+            ...chatSummary,
+            unreadMessages: 0,
+          };
+          return updatedChatSummaries;
+        }
+
+        // Return the previous state if no changes are needed
+        return prevChatSummaries;
+      });
+    }
+  }, [messages, chatRoom]);
+
   useEffect(() => {
     const markMessagesAsRead = async () => {
       if (chatRoom && user) {
-        // await updateMessageStatusToRead(chatRoom._id, user.userInfo._id);
         socket.emit("mark-messages-read", {
           chatRoomId: chatRoom._id,
           userId: user.userInfo._id,
         });
-        const updatedSummaries = await getInitialMessages(user.userInfo._id);
-        setChatList(updatedSummaries);
       }
     };
 

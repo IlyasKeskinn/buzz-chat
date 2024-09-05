@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import currentChatAtom from "@/atom/currentChatAtom";
 const Chat = ({ socket }) => {
   const currentChat = useRecoilValue(currentChatAtom);
+  
   return (
     <>
       <div className="md:block  md:order-3 border-l border-b border-b-bee bg-background  max-w-[100%] w-full md:max-h-[100%] h-[100vh] ">

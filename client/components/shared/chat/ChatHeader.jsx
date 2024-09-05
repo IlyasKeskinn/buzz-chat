@@ -6,11 +6,14 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import currentChatAtom from "@/atom/currentChatAtom";
 import SearchMessage from "./SearchMessage";
 import UserProfileDialog from "../common/UserProfileDialog";
+import onlineUsersAtom from "@/atom/onlineUsersAtom";
 
 const ChatHeader = () => {
   const receiverUser = useRecoilValue(receiverAtom);
+  const onlineUsers = useRecoilValue(onlineUsersAtom);
   const setCurrentChat = useSetRecoilState(currentChatAtom);
-  const isActive = true;
+
+
 
   return (
     <>
@@ -42,9 +45,9 @@ const ChatHeader = () => {
               </p>
               <div
                 className={`w-2 h-2 rounded-full border ${
-                  isActive
-                    ? "bg-green-400 shadow border-green-950 "
-                    : "bg-gray-400 border-gray-950"
+                  onlineUsers.includes(receiverUser._id)
+                    ? "bg-green-400 shadow"
+                    : "bg-gray-400 shadow"
                 }`}
               ></div>
             </div>

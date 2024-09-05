@@ -11,10 +11,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "firebasestorage.googleapis.com",
         port: "",
-
       },
     ],
   },
+  reactStrictMode: false,
 };
 
 export default nextConfig;

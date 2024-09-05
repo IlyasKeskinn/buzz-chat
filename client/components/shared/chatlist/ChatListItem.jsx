@@ -9,11 +9,13 @@ import { check_create_room } from "@/lib/actions/chatRoom.actions";
 import { calculateTime } from "@/utils/CalculateTime";
 import { HiOutlineMicrophone } from "react-icons/hi2";
 import { CiImageOn } from "react-icons/ci";
+import onlineUsersAtom from "@/atom/onlineUsersAtom";
 
 const ChatListItem = ({ chatSummaries }) => {
   const setChatRoom = useSetRecoilState(currentChatAtom);
   const setReceiverUser = useSetRecoilState(receiverAtom);
   const user = useRecoilValue(userAtom);
+  const onlineUsers = useRecoilValue(onlineUsersAtom);
   const { toast } = useToast();
 
   const handleChatRoom = async () => {
@@ -32,6 +34,7 @@ const ChatListItem = ({ chatSummaries }) => {
       }
     }
   };
+  //
 
   return (
     <div
@@ -41,11 +44,18 @@ const ChatListItem = ({ chatSummaries }) => {
       <div>
         <div className="w-full p-2">
           <div className="flex w-full gap-4 justify-between">
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center rounded-full relative">
               <Avatar
                 size="sm"
                 imgURL={chatSummaries.receiverUsers[0].avatarURL}
               />
+              <div
+                className={`absolute top-1 left-1 w-2 h-2 rounded-full border ${
+                  onlineUsers.includes(chatSummaries.receiverUsers[0]._id)
+                    ? "bg-green-400 shadow "
+                    : "hidden"
+                }`}
+              ></div>
             </div>
             <div className="flex flex-col justify-center gap-2 w-full">
               <div className="flex justify-between items-center">
@@ -64,7 +74,7 @@ const ChatListItem = ({ chatSummaries }) => {
                   </span>
                 )}
               </div>
-              <div className="flex w-full gap-1 items-center">
+              <div className="flex w-full gap-1 items-center justify-between">
                 <div className="md:w-36 w-full">
                   {chatSummaries.lastMessage.messageType === "text" ? (
                     <p className="line-clamp-1 text-sm text-muted-foreground">
@@ -85,21 +95,23 @@ const ChatListItem = ({ chatSummaries }) => {
                     </div>
                   )}
                 </div>
-                {user.userInfo._id === chatSummaries.lastMessage.sender ? (
-                  <span className="w-6 h-6 rounded-full flex justify-center items-center">
-                    <MessageStatus
-                      recipients={chatSummaries.lastMessage.recipientStatuses}
-                    />
-                  </span>
-                ) : (
-                  chatSummaries.unreadMessages > 0 && (
+                <div>
+                  {user.userInfo._id === chatSummaries.lastMessage.sender ? (
+                    <span className="w-6 h-6 rounded-full flex justify-center items-center">
+                      <MessageStatus
+                        recipients={chatSummaries.lastMessage.recipientStatuses}
+                      />
+                    </span>
+                  ) : chatSummaries.unreadMessages > 0 ? (
                     <span className="w-6 h-6 rounded-full flex justify-center items-center bg-bee">
                       <p className="text-xs text-center">
                         {chatSummaries.unreadMessages}
                       </p>
                     </span>
-                  )
-                )}
+                  ) : (
+                    <span className="w-6 h-6"></span>
+                  )}
+                </div>
               </div>
             </div>
           </div>

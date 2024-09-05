@@ -19,11 +19,13 @@ import CaptureAudio from "../common/CaptureAudio";
 import { SendPhotoDropdown } from "../common/SendPhotoDropdown";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { firebaseStorage } from "@/utils/FirebaseConfig";
+import chatListAtom from "@/atom/chatListAtom";
 
 const MessageBar = ({ socket }) => {
   const { theme } = useTheme();
   const { toast } = useToast();
 
+  const setChatList = useSetRecoilState(chatListAtom);
   const [text, setText] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -63,9 +65,11 @@ const MessageBar = ({ socket }) => {
       socket.emit("send-msg", {
         chatRoomId: currentChat.chatRoom._id,
         message: newMessage,
-        recieverUser: recieverUser._id,
+        recieverUser: recieverUser,
+        senderUser: user.userInfo,
       });
       setMessages((prevMsg) => [...prevMsg, newMessage]);
+      updateChatSummary(newMessage);
       setText("");
     } catch (error) {
       if (error instanceof Error) {
@@ -114,10 +118,12 @@ const MessageBar = ({ socket }) => {
       });
       socket.emit("send-msg", {
         chatRoomId: currentChat.chatRoom._id,
-        recieverUser: recieverUser._id,
         message: newMessage,
+        recieverUser: recieverUser,
+        senderUser: user.userInfo,
       });
       setMessages((prevMsg) => [...prevMsg, newMessage]);
+      updateChatSummary(newMessage);
       setImgURL("");
       setLoading(false);
     } catch (error) {
@@ -156,11 +162,13 @@ const MessageBar = ({ socket }) => {
 
       socket.emit("send-msg", {
         chatRoomId: currentChat.chatRoom._id,
-        recieverUser: recieverUser._id,
         message: newMessage,
+        recieverUser: recieverUser,
+        senderUser: user.userInfo,
       });
 
       setMessages((prevMsg) => [...prevMsg, newMessage]);
+      updateChatSummary(newMessage);
     } catch (error) {
       if (error instanceof Error) {
         toast({
@@ -173,6 +181,36 @@ const MessageBar = ({ socket }) => {
     }
   };
 
+  const updateChatSummary = (newMessage) => {
+    setChatList((prevChatSummaries) => {
+      const chatSummaryIndex = prevChatSummaries.findIndex(
+        (chat) => chat.chatRoomId === currentChat.chatRoom._id
+      );
+
+      if (chatSummaryIndex !== -1) {
+        const updatedChatSummaries = [...prevChatSummaries];
+        const chatSummary = updatedChatSummaries[chatSummaryIndex];
+
+        updatedChatSummaries[chatSummaryIndex] = {
+          ...chatSummary,
+          lastMessage: newMessage,
+          unreadMessages: 0,
+        };
+
+        return updatedChatSummaries;
+      } else {
+        return [
+          ...prevChatSummaries,
+          {
+            chatRoomId: currentChat.chatRoom._id,
+            lastMessage: newMessage,
+            unreadMessages: 0,
+            receiverUsers: [recieverUser],
+          },
+        ];
+      }
+    });
+  };
   return (
     <div className="w-full h-[8vh] flex items-center gap-1 relative px-4 ">
       {!showCapturAudio && (

@@ -29,7 +29,7 @@ export async function check_create_room(id) {
 
     if (!chatRoom) {
       chatRoom = await ChatRoom.create({
-        participants: [currentUserId, id],
+        participants: [currentUserData, targetUserData],
       });
     }
 

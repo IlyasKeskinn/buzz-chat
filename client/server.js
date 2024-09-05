@@ -3,7 +3,9 @@ const next = require("next");
 const { Server } = require("socket.io");
 
 const dev = process.env.NODE_ENV !== "production";
+
 const hostname = "localhost";
+
 const port = 3000;
 
 const app = next({ dev, hostname, port });
@@ -23,22 +25,45 @@ app.prepare().then(() => {
     global.chatSocket = socket;
     socket.on("add-user", (userId) => {
       onlineUsers.set(userId, socket.id);
+
+      io.emit("online-users", {
+        onlineUsers: Array.from(onlineUsers.keys()),
+      });
+    });
+
+    socket.on("disconnect", () => {
+      // Find the user by socket ID and remove them from onlineUsers
+      onlineUsers.forEach((value, key) => {
+        if (value === socket.id) {
+          onlineUsers.delete(key); // Remove the user from the map
+        }
+      });
+
+      // Emit the updated online users list to all clients
+      io.emit("online-users", {
+        onlineUsers: Array.from(onlineUsers.keys()),
+      });
+    });
+
+    socket.on("sign-out", (id) => {
+      onlineUsers.delete(id);
+      socket.broadcast.emit("online-users", {
+        onlineUsers: Array.from(onlineUsers.keys()),
+      });
     });
 
     socket.on("send-msg", (data) => {
-      const { recieverUser, message, chatRoomId } = data;
-      const sendUserSocket = onlineUsers.get(recieverUser);
+      const { recieverUser, message, chatRoomId, senderUser } = data;
+      const sendUserSocket = onlineUsers.get(recieverUser._id);
 
       if (sendUserSocket) {
-        socket.to(sendUserSocket).emit("msg-recieve", message);
+        socket.to(sendUserSocket).emit("msg-recieve", data);
       }
     });
 
     socket.on("mark-messages-read", async (data) => {
       const { chatRoomId, userId } = data;
-      // Update the message statuses to 'read' in your database here
 
-      // Notify the sender that the messages have been read
       const senderSocket = onlineUsers.get(userId);
       if (senderSocket) {
         socket.to(senderSocket).emit("messages-read", { chatRoomId });

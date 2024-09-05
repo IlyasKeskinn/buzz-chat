@@ -1,20 +1,21 @@
-import { Button } from "@/components/ui/button";
-import { TiUserAddOutline } from "react-icons/ti";
 import { check_create_room } from "@/lib/actions/chatRoom.actions";
 import Avatar from "../common/Avatar";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useToast } from "@/components/ui/use-toast";
 import currentChatAtom from "@/atom/currentChatAtom";
 import receiverAtom from "@/atom/receiverAtom";
 import UserProfileDialog from "../common/UserProfileDialog";
+import onlineUsersAtom from "@/atom/onlineUsersAtom";
 const ContactItem = ({ user }) => {
-  const [chatRoom, setChatRoom] = useRecoilState(currentChatAtom);
-  const [receiver, setReceiverUser] = useRecoilState(receiverAtom);
+  const setChatRoom = useSetRecoilState(currentChatAtom);
+  const setReceiverUser = useSetRecoilState(receiverAtom);
+  const onlineUsers = useRecoilValue(onlineUsersAtom);
 
   const { toast } = useToast();
   const handleChatRoom = async () => {
     try {
       const data = await check_create_room(user?._id);
+
       setChatRoom(data);
       setReceiverUser(user);
     } catch (error) {
@@ -27,7 +28,6 @@ const ContactItem = ({ user }) => {
       }
     }
   };
-
   return (
     <div className="rounded-xl hover:bg-bee/10 transition-colors duration-150 my-5 mx-2 ps-2 p-2">
       <div className="w-full">
@@ -37,8 +37,15 @@ const ContactItem = ({ user }) => {
               <UserProfileDialog
                 user={user}
                 trigger={
-                  <div className="flex justify-center items-center">
+                  <div className="flex justify-center items-center rounded-full relative">
                     <Avatar size="sm" imgURL={user.avatarURL} />
+                    <div
+                      className={`absolute top-1 left-1 w-2 h-2 rounded-full border ${
+                        onlineUsers.includes(user._id)
+                          ? "bg-green-400 shadow "
+                          : "hidden"
+                      }`}
+                    ></div>
                   </div>
                 }
               />
