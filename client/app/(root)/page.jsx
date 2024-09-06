@@ -17,6 +17,7 @@ import {
 } from "@/lib/actions/messages.actions";
 import chatListAtom from "@/atom/chatListAtom";
 import onlineUsersAtom from "@/atom/onlineUsersAtom";
+import usersInChatAtom from "@/atom/userInChatStatusAtom";
 
 export default function Home() {
   const user = useRecoilValue(userAtom);
@@ -25,6 +26,7 @@ export default function Home() {
   const setMessages = useSetRecoilState(messageAtom);
   const setChatList = useSetRecoilState(chatListAtom);
   const setOnlineUsers = useSetRecoilState(onlineUsersAtom);
+  const setUsersInChatRooms = useSetRecoilState(usersInChatAtom);
   const [loading, setLoading] = useState(true);
   const socket = useRef(null);
   const audioRef = useRef(null);
@@ -61,10 +63,15 @@ export default function Home() {
       socket.current.on("online-users", ({ onlineUsers }) => {
         setOnlineUsers(onlineUsers);
       });
+      socket.current.on("active-chatRooms", ({ activeChatRooms }) => {
+        setUsersInChatRooms(activeChatRooms);
+        console.log(activeChatRooms);
+      });
     }
     return () => {
       socket.current?.off("msg-recieve");
       socket.current?.off("online-users");
+      socket.current?.off("active-chatRooms");
     };
   }, [socket.current, chatRoom]);
 
