@@ -47,7 +47,10 @@ const Chat = ({ socket }) => {
       <div className="md:block  md:order-3 border-l border-b border-b-bee bg-background  max-w-[100%] w-full md:max-h-[100%] h-[100vh] ">
         <div>
           <ChatHeader reciverUserInChat={reciverUserInChat} />
-          <ChatContainer socket={socket} />
+          <ChatContainer
+            socket={socket}
+            reciverUserInChat={reciverUserInChat}
+          />
           {!currentChat.blocked ? (
             <MessageBar socket={socket} />
           ) : (

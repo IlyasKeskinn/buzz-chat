@@ -259,7 +259,7 @@ export async function updateMessageStatusToDelivered(userId) {
       let updated = false;
 
       message.recipientStatuses.forEach((recipient) => {
-        if (recipient.userId.equals(userId) && recipient.status === "sent") {
+        if (recipient.userId.equals(userId) && recipient.status === "sent" && recipient.status !== "read") {
           (recipient.status = "delivered"), (updated = true);
         }
       });

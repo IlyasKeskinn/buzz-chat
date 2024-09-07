@@ -10,11 +10,20 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { MdOutlineLogout } from "react-icons/md";
+import { useRouter } from "next/navigation";
 import ThemeButton from "../theme/ThemeButton";
-import { Button } from "@/components/ui/button";
+import socketAtom from "@/atom/socketAtom";
 
 const SettingsContent = () => {
   const user = useRecoilValue(userAtom);
+  const router = useRouter();
+  const socket = useRecoilValue(socketAtom);
+
+
+  
+  const handleLogout = () => {
+    router.push("logout");
+  };
   return (
     <div className="p-5">
       <div className="flex flex-col items-center justify-center gap-6">
@@ -61,7 +70,10 @@ const SettingsContent = () => {
           </Accordion>
         </div>
         <div className="cursor-pointer group">
-          <div className="flex items-center gap-2 p-4 transition-colors duration-200">
+          <div
+            className="flex items-center gap-2 p-4 transition-colors duration-200 cursor-pointer"
+            onClick={handleLogout}
+          >
             <p className="group-hover:text-red-600">Logout</p>
             <MdOutlineLogout className="text-red-600 group-hover:text-red-800 transition-colors duration-200" />
           </div>

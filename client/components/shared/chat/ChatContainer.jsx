@@ -1,20 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Message from "./Message";
-import Empty from "../Empty";
-import {
-  getInitialMessages,
-  getMessages,
-} from "@/lib/actions/messages.actions";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { getMessages } from "@/lib/actions/messages.actions";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import currentChatAtom from "@/atom/currentChatAtom";
 import messageAtom from "@/atom/messageaAtom";
 import userAtom from "@/atom/userAtom";
 import EmptyChat from "./EmptyChat";
 import chatListAtom from "@/atom/chatListAtom";
 
-const ChatContainer = ({ socket }) => {
+const ChatContainer = ({ socket, reciverUserInChat }) => {
   const [messages, setMessages] = useRecoilState(messageAtom);
-  const [chatList, setChatList] = useRecoilState(chatListAtom);
+  const setChatList = useSetRecoilState(chatListAtom);
   const chatRoom = useRecoilValue(currentChatAtom);
   const user = useRecoilValue(userAtom);
   const messagesEndRef = useRef(null);
@@ -57,24 +53,11 @@ const ChatContainer = ({ socket }) => {
     }
   }, [messages, chatRoom]);
 
-  useEffect(() => {
-    const markMessagesAsRead = async () => {
-      if (chatRoom && user) {
-        socket.emit("mark-messages-read", {
-          chatRoomId: chatRoom._id,
-          userId: user.userInfo._id,
-        });
-      }
-    };
-
-    if (chatRoom) {
-      markMessagesAsRead();
-    }
-  }, [chatRoom, user]);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+
   return (
     <div className="h-[82vh] overflow-auto">
       {messages.length <= 0 ? (

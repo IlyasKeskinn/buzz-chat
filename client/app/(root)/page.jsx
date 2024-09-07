@@ -20,6 +20,7 @@ import onlineUsersAtom from "@/atom/onlineUsersAtom";
 import usersInChatAtom from "@/atom/userInChatStatusAtom";
 
 export default function Home() {
+  const HOST = process.env.NEXT_PUBLIC_HOST;
   const user = useRecoilValue(userAtom);
   const chatRoom = useRecoilValue(currentChatAtom);
   const setSocket = useSetRecoilState(socketAtom);
@@ -32,18 +33,20 @@ export default function Home() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    if (user?.userInfo._id && !socket.current) {
-      socket.current = io("http://localhost:3000", {
+    if (user?.userInfo?._id && !socket.current) {
+      socket.current = io(HOST, {
         transports: ["websocket"],
       });
       socket.current.emit("add-user", user.userInfo._id);
-      setSocket(socket.current.id);
+      setSocket(socket.current?.id);
       socket.current.on("online-users", ({ onlineUsers }) => {
         setOnlineUsers(onlineUsers);
       });
-    }
 
-    return () => socket.current?.off("online-users");
+      return () => {
+        socket.current?.off("online-users");
+      };
+    }
   }, [socket.current, user]);
 
   useEffect(() => {

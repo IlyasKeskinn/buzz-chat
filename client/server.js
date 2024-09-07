@@ -32,13 +32,6 @@ app.prepare().then(() => {
       });
     });
 
-    socket.on("sign-out", (id) => {
-      onlineUsers.delete(id);
-      socket.broadcast.emit("online-users", {
-        onlineUsers: Array.from(onlineUsers.keys()),
-      });
-    });
-
     socket.on("send-msg", (data) => {
       const { recieverUser, message, chatRoomId, senderUser } = data;
       const sendUserSocket = onlineUsers.get(recieverUser._id);
@@ -92,14 +85,41 @@ app.prepare().then(() => {
       });
     });
 
-    socket.on("mark-messages-read", async (data) => {
-      const { chatRoomId, userId } = data;
+    socket.on("sign-out", (id) => {
+      // Find the user by socket ID and remove them from onlineUsers
+      let disconnectedUserId = id;
 
-      const senderSocket = onlineUsers.get(userId);
-      if (senderSocket) {
-        socket.to(senderSocket).emit("messages-read", { chatRoomId });
+
+      onlineUsers.delete(id); // Remove the user from the map
+
+      if (disconnectedUserId) {
+        // Loop through all chat rooms to remove the user from each room they were part of
+        activeChatRooms.forEach((usersInRoom, chatRoomId) => {
+          if (usersInRoom.has(disconnectedUserId)) {
+            usersInRoom.delete(disconnectedUserId); // Remove user from the room
+
+            // If the room is empty, delete the room
+            if (usersInRoom.size === 0) {
+              activeChatRooms.delete(chatRoomId);
+            }
+          }
+        });
+
+        // Emit updated room info to all clients after the user has been removed
+        io.emit("active-chatRooms", {
+          activeChatRooms: Array.from(activeChatRooms.keys()).map((roomId) => ({
+            roomId,
+            users: Array.from(activeChatRooms.get(roomId)), // All users in this room
+          })),
+        });
       }
+
+      // Emit the updated online users list to all clients
+      io.emit("online-users", {
+        onlineUsers: Array.from(onlineUsers.keys()),
+      });
     });
+
     socket.on("disconnect", () => {
       // Find the user by socket ID and remove them from onlineUsers
       let disconnectedUserId;
