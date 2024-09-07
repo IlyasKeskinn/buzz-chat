@@ -4,6 +4,8 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 let cached = mongoose;
 
+console.log(MONGODB_URI);
+
 export const connectToDatabase = async () => {
   if (cached.conn) return cached.conn;
 

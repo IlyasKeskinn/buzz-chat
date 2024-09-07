@@ -4,7 +4,6 @@ import { login } from "../lib";
 import {
   deleteObject,
   getDownloadURL,
-  getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
@@ -14,6 +13,8 @@ import User from "../database/models/user.model";
 
 export async function checkUser(email) {
   connectToDatabase();
+
+  console.log(email);
 
   try {
     const user = await User.findOne({ email: email });
@@ -25,6 +26,7 @@ export async function checkUser(email) {
     login(user._id);
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
+    console.error(error);
     throw new Error(error);
   }
 }
@@ -72,6 +74,7 @@ export async function createUser(data) {
 
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
+    console.error(error);
     throw new Error(error);
   }
 }

@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/shared/theme/theme-provider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import RecoilContextProvider from "./recoilContextProvider";
 
 const inter = Inter({ subsets: ["latin"] });
