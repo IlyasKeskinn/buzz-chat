@@ -46,10 +46,15 @@ export async function createMessage(data) {
     );
 
     const recipientStatuses = receiverUsers.map((receiver) => {
-      const isOnline = global.onlineUsers.has(receiver._id.toString());
+      const receiverIdString = receiver._id.toString();
+      const isOnline = global.onlineUsers.has(receiverIdString);
+      const isUserInChat =
+        global.activeChatRooms.has(chatRoomId) &&
+        global.activeChatRooms.get(chatRoomId).has(receiverIdString);
+
       return {
         userId: receiver._id,
-        status: isOnline ? "delivered" : "sent",
+        status: isUserInChat ? "read" : isOnline ? "delivered" : "sent",
       };
     });
 
@@ -106,10 +111,14 @@ export async function sendImageMessage(data) {
     );
 
     const recipientStatuses = receiverUsers.map((recieverUser) => {
-      const isOnline = global.onlineUsers.has(recieverUser._id.toString());
+      const receiverIdString = recieverUser._id.toString();
+      const isOnline = global.onlineUsers.has(receiverIdString);
+      const isUserInChat =
+        global.activeChatRooms.has(chatRoomId) &&
+        global.activeChatRooms.get(chatRoomId).has(receiverIdString);
       return {
         userId: recieverUser._id,
-        status: isOnline ? "delivered" : "sent",
+        status: isUserInChat ? "read" : isOnline ? "delivered" : "sent",
       };
     });
 
@@ -173,10 +182,14 @@ export async function sendAudioMessage(data) {
     );
 
     const recipientStatuses = receiverUsers.map((recieverUser) => {
-      const isOnline = global.onlineUsers.has(recieverUser._id.toString());
+      const receiverIdString = recieverUser._id.toString();
+      const isOnline = global.onlineUsers.has(receiverIdString);
+      const isUserInChat =
+        global.activeChatRooms.has(chatRoomId) &&
+        global.activeChatRooms.get(chatRoomId).has(receiverIdString);
       return {
         userId: recieverUser._id,
-        status: isOnline ? "delivered" : "sent",
+        status: isUserInChat ? "read" : isOnline ? "delivered" : "sent",
       };
     });
 
