@@ -33,6 +33,13 @@ export default function Home() {
   const audioRef = useRef(null);
 
   useEffect(() => {
+    // Initialize notification_sound in localStorage if not present
+    if (!localStorage.getItem("notification_sound")) {
+      localStorage.setItem("notification_sound", "true");
+    }
+  }, []);
+
+  useEffect(() => {
     if (user?.userInfo?._id && !socket.current) {
       socket.current = io(HOST, {
         transports: ["websocket"],
@@ -52,7 +59,10 @@ export default function Home() {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-recieve", (data) => {
-        if (audioRef.current) {
+        // Check localStorage for notification_sound setting
+        const notificationSound = localStorage.getItem("notification_sound");
+
+        if (notificationSound === "true" && audioRef.current) {
           audioRef.current.play();
         }
 

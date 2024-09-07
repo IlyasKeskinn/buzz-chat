@@ -1,6 +1,6 @@
 import userAtom from "@/atom/userAtom";
 import Avatar from "../common/Avatar";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   Accordion,
   AccordionContent,
@@ -12,15 +12,29 @@ import { Label } from "@/components/ui/label";
 import { MdOutlineLogout } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import ThemeButton from "../theme/ThemeButton";
-import socketAtom from "@/atom/socketAtom";
+import { useEffect, useState } from "react";
 
 const SettingsContent = () => {
   const user = useRecoilValue(userAtom);
   const router = useRouter();
-  const socket = useRecoilValue(socketAtom);
 
+  const [isNotificationSoundActive, setIsNotificationSoundActive] =
+    useState(false);
 
-  
+  // Load the setting from localStorage when the component mounts
+  useEffect(() => {
+    const storedSoundSetting = localStorage.getItem("notification_sound");
+    if (storedSoundSetting) {
+      setIsNotificationSoundActive(storedSoundSetting === "true");
+    }
+  }, []);
+
+  const handleNotificationSoundState = () => {
+    const newValue = !isNotificationSoundActive;
+    setIsNotificationSoundActive(newValue);
+    localStorage.setItem("notification_sound", newValue.toString());
+  };
+
   const handleLogout = () => {
     router.push("logout");
   };
@@ -57,7 +71,11 @@ const SettingsContent = () => {
                       <Label htmlFor="notification_sound">
                         Notification sound
                       </Label>
-                      <Switch id="notification_sound" />
+                      <Switch
+                        id="notification_sound"
+                        onCheckedChange={handleNotificationSoundState}
+                        checked={isNotificationSoundActive}
+                      />
                     </div>
                   </div>
                 </div>

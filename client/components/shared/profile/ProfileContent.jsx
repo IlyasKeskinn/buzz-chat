@@ -34,7 +34,7 @@ const ProfileContent = () => {
   }, [activeMenu]);
 
   return (
-    <div className="my-3 md:h-[80vh] h-[65vh]">
+    <div className="my-3 md:h-[80vh] h-[65vh] overflow-auto">
       <div className="flex flex-col items-center justify-center gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
           <div className="border-2 border-bee rounded-full">
