@@ -12,7 +12,7 @@ import { dataURLtoBlob } from "../helpers/dataURLtoBlob";
 import User from "../database/models/user.model";
 
 export async function checkUser(email) {
-  connectToDatabase();
+  await connectToDatabase();
 
   console.log(email);
 
