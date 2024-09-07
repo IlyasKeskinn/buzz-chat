@@ -12,9 +12,7 @@ import userInChatAtom from "@/atom/userInChatStatusAtom";
 const ChatHeader = ({ reciverUserInChat }) => {
   const receiverUser = useRecoilValue(receiverAtom);
   const onlineUsers = useRecoilValue(onlineUsersAtom);
-  const [currentChat, setCurrentChat] = useRecoilState(currentChatAtom);
-  const contactUserInChat = useRecoilValue(userInChatAtom);
-  console.log(reciverUserInChat);
+  const setCurrentChat = useSetRecoilState(currentChatAtom);
 
   return (
     <>

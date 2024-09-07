@@ -65,7 +65,6 @@ export default function Home() {
       });
       socket.current.on("active-chatRooms", ({ activeChatRooms }) => {
         setUsersInChatRooms(activeChatRooms);
-        console.log(activeChatRooms);
       });
     }
     return () => {

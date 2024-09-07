@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 import currentChatAtom from "@/atom/currentChatAtom";
 import { useRecoilValue } from "recoil";
+import Avatar from "../common/Avatar";
+import receiverAtom from "@/atom/receiverAtom";
 
 // Store the current playing WaveSurfer instance in a ref or context
 let currentPlayingWaveform = null;
@@ -17,6 +19,8 @@ const VoiceMessage = ({ user, message }) => {
   const [waveform, setWaveform] = useState(null);
   const [audioRate, setAudioRate] = useState(1);
   const currentChat = useRecoilValue(currentChatAtom);
+  const currenRecieverUser = useRecoilValue(receiverAtom);
+
 
   useEffect(() => {
     if (waveform) {
@@ -159,19 +163,34 @@ const VoiceMessage = ({ user, message }) => {
         >
           <div className="p-2 rounded-xl">
             <div className="flex items-center gap-4">
-              {audioMessage &&
-                (!playingAudio ? (
-                  <div
-                    className="cursor-pointer w-8"
-                    onClick={handlePlayingAudio}
-                  >
-                    <FaPlay className="text-xl" />
-                  </div>
-                ) : (
-                  <div className="cursor-pointer w-8" onClick={handleStopAudio}>
-                    <FaPause className="text-xl" />
-                  </div>
-                ))}
+              <div>
+                <Avatar
+                  imgURL={
+                    message.sender !== user.userInfo._id
+                      ? currenRecieverUser.avatarURL
+                      : user.userInfo.avatarURL
+                  }
+                  size="sm"
+                />
+              </div>
+              <div>
+                {audioMessage &&
+                  (!playingAudio ? (
+                    <div
+                      className="cursor-pointer w-8"
+                      onClick={handlePlayingAudio}
+                    >
+                      <FaPlay className="text-xl" />
+                    </div>
+                  ) : (
+                    <div
+                      className="cursor-pointer w-8"
+                      onClick={handleStopAudio}
+                    >
+                      <FaPause className="text-xl" />
+                    </div>
+                  ))}
+              </div>
               <div className="flex flex-col w-52">
                 <div className="flex w-52 gap-2">
                   <div
@@ -179,24 +198,24 @@ const VoiceMessage = ({ user, message }) => {
                     ref={waveFormRef}
                     id="waveformContainer"
                   ></div>
-                  <div className="flex  justify-center items-center w-10">
+                  <div className="flex justify-center items-center w-10">
                     <button className="px-2" onClick={handleChangeAudioRate}>
                       {audioRate}x
                     </button>
                   </div>
                 </div>
-                <span className="text-xs">
-                  {!playingAudio
-                    ? formatTime(totalDuration)
-                    : formatTime(currentPlaybackTime)}
-                </span>
               </div>
             </div>
           </div>
-          <div className="flex justify-between px-1 gap-8">
+          <div className="flex justify-between px-2 gap-8">
             {message.sender === user.userInfo._id && (
               <MessageStatus recipients={message.recipientStatuses} />
             )}
+            <span className="text-xs absolute bottom-6 left-24">
+              {!playingAudio
+                ? formatTime(totalDuration)
+                : formatTime(currentPlaybackTime)}
+            </span>
             <div
               className={`text-xs text-gray-500 ${
                 message.sender !== user.userInfo._id ? "text-start" : "text-end"
