@@ -44,7 +44,7 @@ const Chat = ({ socket }) => {
 
   return (
     <>
-      <div className="md:block  md:order-3 border-l border-b border-b-bee bg-background  max-w-[100%] w-full md:max-h-[100%] h-[100vh] ">
+      <div className="md:block  md:order-3 md:border-l md:border-b border-b-bee bg-background  max-w-[100%] w-full md:max-h-[100%] h-[100dvh] ">
         <div>
           <ChatHeader reciverUserInChat={reciverUserInChat} />
           <ChatContainer

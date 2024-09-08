@@ -212,7 +212,7 @@ const MessageBar = ({ socket }) => {
     });
   };
   return (
-    <div className="w-full h-[8vh] flex items-center gap-1 relative px-4 ">
+    <div className="w-full h-[8dvh] flex items-center gap-1 relative px-4 ">
       {!showCapturAudio && (
         <>
           <div
@@ -275,6 +275,8 @@ const MessageBar = ({ socket }) => {
           <EmojiPicker
             theme={theme === "dark" ? "dark" : "light"}
             onEmojiClick={onEmojiClick}
+            autoFocusSearch={false}
+            searchDisabled={true} // This disables the search bar
           />
         </div>
       )}

@@ -16,7 +16,7 @@ const ChatHeader = ({ reciverUserInChat }) => {
 
   return (
     <>
-      <div className="h-[10vh] max-h-[10vh]: w-full border-b shadow ">
+      <div className="h-[10dvh] max-h-[10dvh]: w-full border-b shadow ">
         <div className="flex h-full justify-between items-center px-5">
           <div className="flex justify-between items-center gap-4">
             <div className="flex justify-center items-center">

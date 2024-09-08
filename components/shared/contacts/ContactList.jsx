@@ -6,7 +6,7 @@ import filteredContactsAtom from "@/atom/filteredContacts";
 const ContactList = ({ users }) => {
   const filteredContacts = useRecoilValue(filteredContactsAtom);
   return (
-    <div className="overflow-auto md:h-[80vh] h-[65vh]">
+    <div className="overflow-auto md:h-[80dvh] h-[65dvh]">
       {users.length > 0 ? (
         filteredContacts.length > 0 ? (
           filteredContacts.map((user) => (

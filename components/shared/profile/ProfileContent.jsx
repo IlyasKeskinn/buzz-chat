@@ -34,7 +34,7 @@ const ProfileContent = () => {
   }, [activeMenu]);
 
   return (
-    <div className="my-3 md:h-[80vh] h-[65vh] overflow-auto">
+    <div className="my-3 md:h-[80dvh] h-[65dvh] overflow-auto">
       <div className="flex flex-col items-center justify-center gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
           <div className="border-2 border-bee rounded-full">
@@ -59,7 +59,7 @@ const ProfileContent = () => {
                 <h5 className="text-center">Blocked Users</h5>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="overflow-auto md:h-[40vh] h-[25vh]">
+                <div className="overflow-auto md:h-[40dvh] h-[25dvh]">
                   {blockedUsers.length > 0 ? (
                     blockedUsers.map((blockUser, index) => (
                       <BlockedUserTile key={index} user={blockUser} />

@@ -20,7 +20,7 @@ const Menu = ({ user }) => {
     <div
       className={`${
         chatRoom ? "hidden" : "block"
-      } md:block md:max-w-[80px] max-w-[100%] w-full md:max-h-screen max-h-[10%] md:order-1 order-2 bg-secondary z-100`}
+      } md:block md:max-w-[80px] max-w-[100%] w-full md:max-h-dvh max-h-[10%] md:order-1 order-2 bg-secondary z-100`}
     >
       <div className="flex h-full md:flex-col flex-row justify-center md:justify-between items-center py-5 px-2">
         <div className="md:block hidden">

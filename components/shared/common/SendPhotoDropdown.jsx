@@ -13,6 +13,10 @@ export const SendPhotoDropdown = ({ imgURL, setImgURL }) => {
   const { handleImageChange } = usePrevImg(imgURL, setImgURL);
   const [open, setOpen] = useState(false);
 
+  const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(
+    navigator.userAgent
+  );
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -41,13 +45,15 @@ export const SendPhotoDropdown = ({ imgURL, setImgURL }) => {
             className="hidden"
             onChange={handleImageChange}
           />
-          <div
-            className="flex justify-center items-center text-sm gap-2 hover:bg-gray-500/10 rounded-xl p-4 cursor-pointer"
-            onClick={handleOpen}
-          >
-            <CiCamera className="text-sm" />
-            <span>Take photo</span>
-          </div>
+          {!isMobileDevice && (
+            <div
+              className="flex justify-center items-center text-sm gap-2 hover:bg-gray-500/10 rounded-xl p-4 cursor-pointer"
+              onClick={handleOpen}
+            >
+              <CiCamera className="text-sm" />
+              <span>Take photo</span>
+            </div>
+          )}
         </div>
         <CapturePhoto open={open} setOpen={setOpen} setImgURL={setImgURL} />
       </DropdownMenuContent>

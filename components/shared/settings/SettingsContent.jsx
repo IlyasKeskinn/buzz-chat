@@ -39,7 +39,7 @@ const SettingsContent = () => {
     router.push("logout");
   };
   return (
-    <div className="p-5">
+    <div className="p-5 h-[70dvh] overflow-auto">
       <div className="flex flex-col items-center justify-center gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
           <div className="border-2 border-bee rounded-full">

@@ -59,7 +59,7 @@ const ChatContainer = ({ socket, reciverUserInChat }) => {
 
 
   return (
-    <div className="h-[82vh] overflow-auto">
+    <div className="h-[82dvh] overflow-auto">
       {messages.length <= 0 ? (
         <EmptyChat />
       ) : (

@@ -6,7 +6,7 @@ const ChatList = ({ chatList }) => {
   const filteredChatList = useRecoilValue(filteredChatListAtom);
 
   return (
-    <div className="overflow-auto md:h-[80vh] h-[65vh]">
+    <div className="overflow-auto md:h-[80dvh] h-[65dvh]">
       {chatList.length > 0 ? (
         filteredChatList.length > 0 ? (
           filteredChatList.map((chatItem, index) => {

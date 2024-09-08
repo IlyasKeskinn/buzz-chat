@@ -37,7 +37,7 @@ const Contacts = () => {
     <>
       <ContactsHeader />
       {loading ? (
-        <div className="h-[70vh] flex justify-center items-center">
+        <div className="h-[70dvh] flex justify-center items-center">
           <Spinner />
         </div>
       ) : (

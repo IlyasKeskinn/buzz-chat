@@ -157,7 +157,7 @@ export default function Home() {
       />
       {!user && <PageLoading />}
       {user && (
-        <main className="flex md:flex-row flex-col h-screen w-screen max-h-screen max-w-full overflow-hidden">
+        <main className="flex md:flex-row flex-col h-dvh w-screen max-h-dvh max-w-full overflow-hidden">
           <Menu user={user} />
           <Aside />
           {chatRoom ? <Chat socket={socket.current} /> : <Empty />}
