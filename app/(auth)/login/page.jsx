@@ -9,7 +9,7 @@ import { useRecoilState } from "recoil";
 import { checkUser } from "@/lib/actions/user.actions";
 import { useToast } from "@/components/ui/use-toast";
 import userAtom from "@/atom/userAtom";
-import logo from "../../../client/public/logo.json";
+import logo from "../../../public/logo.json";
 
 const Login = () => {
   const router = useRouter();
