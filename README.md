@@ -2,7 +2,7 @@
 
 **Buzzys** is a dynamic web messaging application similar to WhatsApp, allowing users to connect and chat without needing phone numbers. Users can log in using their Google accounts and easily find and message other users through the **Contacts** section. The application supports real-time messaging with Socket.io, as well as features like blocking users, sending media, and message search functionality.
 
-<img width="1470" alt="Ekran Resmi 2024-09-09 22 07 30" src="https://github.com/user-attachments/assets/549a53a8-034d-4bc3-be01-d4e0de5dad20">
+<img width="1470" alt="Ekran Resmi 2024-09-09 22 35 05" src="https://github.com/user-attachments/assets/78e0ed3f-8a65-4185-9af1-38f8d02ffe9e">
 
 
 ---
