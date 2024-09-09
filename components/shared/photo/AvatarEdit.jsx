@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import usePrevImg from "@/hooks/usePrevImg";
 import Image from "next/image";
