@@ -18,6 +18,10 @@ const AvatarEdit = ({ imgURL, setImgURL }) => {
   const [open, setOpen] = useState(false);
   const { handleImageChange } = usePrevImg(imgURL, setImgURL);
 
+  const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(
+    navigator.userAgent
+  );
+
   const handleOpen = () => setOpen(true);
 
   return (
@@ -59,12 +63,14 @@ const AvatarEdit = ({ imgURL, setImgURL }) => {
         >
           Choose from library
         </div>
-        <div
-          onClick={handleOpen}
-          className="px-2 py-5 my-4 text-base rounded-xl hover:bg-bee/30 cursor-pointer"
-        >
-          Take photo
-        </div>
+        {!isMobileDevice && (
+          <div
+            onClick={handleOpen}
+            className="px-2 py-5 my-4 text-base rounded-xl hover:bg-bee/30 cursor-pointer"
+          >
+            Take photo
+          </div>
+        )}
         <CapturePhoto open={open} setOpen={setOpen} setImgURL={setImgURL} />
       </DropdownMenuContent>
     </DropdownMenu>
