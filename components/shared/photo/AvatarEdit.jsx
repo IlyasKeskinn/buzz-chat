@@ -17,10 +17,16 @@ const AvatarEdit = ({ imgURL, setImgURL }) => {
   const imageRef = useRef(null);
   const [open, setOpen] = useState(false);
   const { handleImageChange } = usePrevImg(imgURL, setImgURL);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
 
-  const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(
-    navigator.userAgent
-  );
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof navigator !== "undefined") {
+      const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(
+        navigator.userAgent
+      );
+      setIsMobileDevice(isMobile);
+    }
+  }, []);
 
   const handleOpen = () => setOpen(true);
 

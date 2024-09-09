@@ -3,11 +3,11 @@ import Lottie from "lottie-react";
 import logo from "../../../public/logo.json";
 import SignUpForm from "@/components/shared/common/Forms/SignUpForm";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
-  const router = useRouter();
+  const router = useRouter;
   const currentUser = firebaseAuth.currentUser;
   useEffect(() => {
     if (!currentUser) {
